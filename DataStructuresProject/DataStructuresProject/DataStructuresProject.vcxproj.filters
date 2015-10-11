@@ -35,10 +35,10 @@
     <ClCompile Include="Exoplanet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyArray.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="MyArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

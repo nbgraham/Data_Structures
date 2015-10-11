@@ -84,6 +84,14 @@ void Exoplanet::printPlanet(void)
 	return;
 }
 
+string Exoplanet::toString(void)
+{
+	string result = { name };
+	result += "," + to_string(msini) + "," + to_string(a) + "," + to_string(per) + "," + to_string(ecc) + "," + to_string(om) + ",";
+	result += to_string(t0) + "," + to_string(k);
+	return result;
+}
+
 /*
 Overrides the == operator for searching through MyArray<Exoplanet>. Compares solely on planetName
 @param otherPlanet	the planet to compare this to
@@ -96,4 +104,131 @@ bool Exoplanet::operator==(Exoplanet& otherPlanet)
 	}
 
 	return false;
+}
+
+int Exoplanet::compare(Exoplanet & otherPlanet, char sortingKey)
+{
+	int result;
+
+	switch (sortingKey)
+	{
+	case 'N':
+		if (name > otherPlanet.getName())
+		{
+			result = 1;
+		}
+		else if (name < otherPlanet.getName())
+		{
+			result = -1;
+		}
+		else
+		{
+			result = 0;
+		}
+		break;
+	case 'M':
+		if (msini > otherPlanet.getMsini())
+		{
+			result = 1;
+		}
+		else if (msini < otherPlanet.getMsini())
+		{
+			result = -1;
+		}
+		else
+		{
+			result = 0;
+		}
+		break;
+	case 'A':
+		if (a > otherPlanet.getA())
+		{
+			result = 1;
+		}
+		else if (a < otherPlanet.getA())
+		{
+			result = -1;
+		}
+		else
+		{
+			result = 0;
+		}
+		break;
+	case 'P':
+		if (per > otherPlanet.getPer())
+		{
+			result = 1;
+		}
+		else if (per < otherPlanet.getPer())
+		{
+			result = -1;
+		}
+		else
+		{
+			result = 0;
+		}
+		break;
+	case 'E':
+		if (ecc > otherPlanet.getEcc())
+		{
+			result = 1;
+		}
+		else if (ecc < otherPlanet.getEcc())
+		{
+			result = -1;
+		}
+		else
+		{
+			result = 0;
+		}
+		break;
+	case 'O':
+		if (om > otherPlanet.getOm())
+		{
+			result = 1;
+		}
+		else if (om < otherPlanet.getOm())
+		{
+			result = -1;
+		}
+		else
+		{
+			result = 0;
+		}
+		break;
+	case 'T':
+		if (t0 > otherPlanet.getT0())
+		{
+			result = 1;
+		}
+		else if (t0 < otherPlanet.getT0())
+		{
+			result = -1;
+		}
+		else
+		{
+			result = 0;
+		}
+		break;
+	case 'K':
+		if (k > otherPlanet.getK())
+		{
+			result = 1;
+		}
+		else if (k < otherPlanet.getK())
+		{
+			result = -1;
+		}
+		else
+		{
+			result = 0;
+		}
+		break;
+	default:
+		throw exception();
+		result = 0;
+		break;
+	}
+
+	return result;
 }

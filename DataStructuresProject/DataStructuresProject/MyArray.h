@@ -7,13 +7,20 @@ private:
 	dataType* arr;
 	int size;
 	int capacity;
+	void resize();
 public:
 	MyArray(void);
 	MyArray(int _capacity);
-	void add(dataType newElement);
+	//~MyArray(void);
+
+	dataType* add(dataType& newElement);
 	void remove(dataType element);
 	void removeAt(int index);
-	dataType at(int index) const;
-	int indexOf(dataType element) const;
-	int length(void) const { return size; };
+	dataType at(int index);
+	int indexOf(dataType element);
+	int length(void) { return size; };
+	string toString(void);
+	dataType operator[](int index);
+	void swap(int index0, int index1);
 };
+

@@ -1,4 +1,6 @@
 #include <exception>
+#include <sstream>
+using namespace std;
 
 #include "MyArray.h"
 #include "Exoplanet.h"
@@ -33,25 +35,42 @@ MyArray<dataType>::MyArray(int _capacity)
 }
 
 /*
+Causes error
+template<typename dataType>
+MyArray<dataType>::~MyArray(void)
+{
+delete[] arr;
+arr = nullptr;
+}
+*/
+
+/*
 Adds the element to the end of the array
 If the array is full, it allocates a new array with twice the size, copies over the old elements and adds the new one
 @param newElement	the element to be added
 */
 template <typename dataType>
-void MyArray<dataType>::add(dataType newElement)
+dataType* MyArray<dataType>::add(dataType& newElement)
 {
 	if (size == capacity)
 	{
-		dataType* temp = arr;
-		arr = new dataType[capacity * 2];
-		for (int i = 0; i < size; i++)
-		{
-			arr[i] = temp[i];
-		}
-		delete[] temp;
-		capacity *= 2;
+		resize();
 	}
-	arr[size++] = newElement;
+	arr[size] = newElement;
+	return &arr[size++];
+}
+
+template<typename dataType>
+void MyArray<dataType>::resize()
+{
+	dataType* temp = arr;
+	arr = new dataType[capacity * 2];
+	for (int i = 0; i < size; i++)
+	{
+		arr[i] = temp[i];
+	}
+	delete[] temp;
+	capacity *= 2;
 }
 
 /*
@@ -101,7 +120,7 @@ Returns the element at the specified index.
 @return	the value at that index
 */
 template<typename dataType>
-dataType MyArray<dataType>::at(int index) const
+dataType MyArray<dataType>::at(int index)
 {
 	if (index < 0 || index >= size) throw exception("Index out of range.");
 
@@ -114,7 +133,7 @@ Returns the index of the specified element, or -1 if it is not in the array
 @return	the index of the specified element
 */
 template<typename dataType>
-int MyArray<dataType>::indexOf(dataType element) const
+int MyArray<dataType>::indexOf(dataType element)
 {
 	for (int i = 0; i < size; i++)
 	{
@@ -126,4 +145,38 @@ int MyArray<dataType>::indexOf(dataType element) const
 
 	//If element was not found, return -1
 	return -1;
+}
+
+template<typename dataType>
+string MyArray<dataType>::toString(void)
+{
+	ostringstream os;
+	os << "[";
+	if (is_fundamental<dataType>::value)
+	{
+		for (int i = 0; i < size - 1; i++)
+		{
+			os << arr[i];
+			os << ",";
+		}
+		os << arr[size - 1];
+	}
+
+	os << "]";
+
+	return os.str();
+}
+
+template<typename dataType>
+dataType MyArray<dataType>::operator[](int index)
+{
+	return at(index);
+}
+
+template<typename dataType>
+void MyArray<dataType>::swap(int index0, int index1)
+{
+	dataType temp = arr[index0];
+	arr[index0] = arr[index1];
+	arr[index1] = temp;
 }

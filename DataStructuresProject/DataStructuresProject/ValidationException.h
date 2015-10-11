@@ -27,7 +27,7 @@ public:
 		}
 		return false;
 	}
-	string getInfo(void) const
+	string getInfo(void)
 	{
 		return message + " at line " + to_string(lineNumber);
 	}

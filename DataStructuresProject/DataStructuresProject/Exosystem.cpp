@@ -20,19 +20,19 @@ Exosystem::Exosystem(void)
 /*
 Constructor that sets the values of exosystem
 */
-Exosystem::Exosystem(string _starName, int _numberOfPlanets)
+Exosystem::Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar)
 {
 	starName = _starName;
 	numberOfPlanets = _numberOfPlanets;
+	hasSingleStar = _hasSingleStar;
 }
 
 /*
 Validates that the system has not reached its specified number of planets and _exoplanet is unique in the system
 Then adds the planet to the list of planets
-Pass by reference because the reference of the added planet will be lost from the main and so will not be changed
 @param _exoplanet	the planet to be added
 */
-void Exosystem::addPlanet(Exoplanet& _exoplanet)
+void Exosystem::addPlanet(Exoplanet _exoplanet)
 {
 	if (planets.length() == numberOfPlanets)
 	{
@@ -53,7 +53,7 @@ void Exosystem::addPlanet(Exoplanet& _exoplanet)
 /*
 Iterates over the planets in this system and calculates the average msini
 */
-double Exosystem::calculateAverageMsini(void) const
+double Exosystem::calculateAverageMsini(void)
 {
 	double sum = 0;
 	int i;
@@ -70,7 +70,7 @@ double Exosystem::calculateAverageMsini(void) const
 /*
 Iterates over the planets in this system and calculates the max per
 */
-double Exosystem::calculateMaxPer(void) const
+double Exosystem::calculateMaxPer(void)
 {
 	//The orbital period of the planet in days will always be positive so the minimum value is 0
 	double max = 0;
@@ -92,7 +92,7 @@ double Exosystem::calculateMaxPer(void) const
 /*
 Iterates over the planets in this system and calculates the average msini
 */
-double Exosystem::calculateMinPer(void) const
+double Exosystem::calculateMinPer(void)
 {
 	//Set to the largest possible double
 	double min = DBL_MAX;
@@ -128,6 +128,23 @@ void Exosystem::printExosystem(void)
 	//Two line space between systems
 	cout << "\n\n";
 	return;
+}
+
+string Exosystem::toString(void)
+{
+	string result;
+	result += starName + "," + to_string(numberOfPlanets) + "," + to_string(calculateAverageMsini()) + "," + to_string(calculateMaxPer()) + "," + to_string(calculateMinPer());
+	result += "\n";
+
+	int i;
+	for (i = 0; i < numberOfPlanets; i++)
+	{
+		result += planets.at(i).toString();
+		result += "\n";
+	}
+	//Two line space between systems
+	result += "\n\n";
+	return result;
 }
 
 /*
