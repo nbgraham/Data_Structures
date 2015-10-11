@@ -10,10 +10,6 @@ template MyArray<int>;
 template MyArray<Exoplanet>;
 template MyArray<Exosystem>;
 
-//Constructors
-/*
-Default constructor
-*/
 template <typename dataType>
 MyArray<dataType>::MyArray()
 {
@@ -22,10 +18,6 @@ MyArray<dataType>::MyArray()
 	arr = new dataType[10];
 }
 
-/*
-Constructor that specifies the initial capacity
-@param _capacity	the initial capacity
-*/
 template <typename dataType>
 MyArray<dataType>::MyArray(int _capacity)
 {
@@ -44,11 +36,6 @@ arr = nullptr;
 }
 */
 
-/*
-Adds the element to the end of the array
-If the array is full, it allocates a new array with twice the size, copies over the old elements and adds the new one
-@param newElement	the element to be added
-*/
 template <typename dataType>
 dataType* MyArray<dataType>::add(dataType& newElement)
 {
@@ -73,10 +60,6 @@ void MyArray<dataType>::resize()
 	capacity *= 2;
 }
 
-/*
-Removes the specified element from the array and shifts all the elements accordingly
-@param element	the element to be removed
-*/
 template <typename dataType>
 void MyArray<dataType>::remove(dataType element)
 {
@@ -98,10 +81,6 @@ void MyArray<dataType>::remove(dataType element)
 	size--;
 }
 
-/*
-Removes the element at the specified index and shifts all the elements accordingly
-@param index	the specified index
-*/
 template <typename dataType>
 void MyArray<dataType>::removeAt(int index)
 {
@@ -114,11 +93,6 @@ void MyArray<dataType>::removeAt(int index)
 	size--;
 }
 
-/*
-Returns the element at the specified index.
-@param index	the specified index
-@return	the value at that index
-*/
 template<typename dataType>
 dataType MyArray<dataType>::at(int index)
 {
@@ -127,11 +101,6 @@ dataType MyArray<dataType>::at(int index)
 	return arr[index];
 }
 
-/*
-Returns the index of the specified element, or -1 if it is not in the array
-@param element	the specified element
-@return	the index of the specified element
-*/
 template<typename dataType>
 int MyArray<dataType>::indexOf(dataType element)
 {

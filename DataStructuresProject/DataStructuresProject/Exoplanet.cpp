@@ -4,10 +4,6 @@ using namespace std;
 
 #include "Exoplanet.h"
 
-//Constructors
-/*
-Default constructor sets values to 0
-*/
 Exoplanet::Exoplanet()
 {
 	name = 0;
@@ -20,9 +16,6 @@ Exoplanet::Exoplanet()
 	k = 0.0;
 }
 
-/*
-Constructor that sets all the values of the planet
-*/
 Exoplanet::Exoplanet(char _name, double _msini, double _a, double _per, double _ecc, double _om, double _t0, double _k)
 {
 	name = _name;
@@ -35,10 +28,6 @@ Exoplanet::Exoplanet(char _name, double _msini, double _a, double _per, double _
 	k = _k;
 }
 
-//Methods
-/*
-Prints the information of the planet in comma separated format
-*/
 void Exoplanet::printPlanet(void)
 {
 	string planetName = { name };
@@ -92,10 +81,6 @@ string Exoplanet::toString(void)
 	return result;
 }
 
-/*
-Overrides the == operator for searching through MyArray<Exoplanet>. Compares solely on planetName
-@param otherPlanet	the planet to compare this to
-*/
 bool Exoplanet::operator==(Exoplanet& otherPlanet)
 {
 	if (name == otherPlanet.name)
