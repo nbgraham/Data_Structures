@@ -22,7 +22,7 @@ public:
 	@param _capacity	the initial capacity
 	*/
 	MyArray(int _capacity);
-	//~MyArray(void);
+	~MyArray(void);
 
 	/*
 	Adds the element to the end of the array
@@ -86,15 +86,16 @@ MyArray<dataType>::MyArray(int _capacity)
 	arr = new dataType[capacity];
 }
 
-/*
-Causes error
 template<typename dataType>
 MyArray<dataType>::~MyArray(void)
 {
-delete[] arr;
-arr = nullptr;
+	cout << "Myarray destructor called\n";
+	if (arr != NULL)
+	{
+		delete arr;
+		arr = NULL;
+	}
 }
-*/
 
 template <typename dataType>
 void MyArray<dataType>::add(dataType newElement)

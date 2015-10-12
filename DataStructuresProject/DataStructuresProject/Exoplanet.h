@@ -31,7 +31,7 @@ public:
 	/*
 	Empty destructor
 	*/
-	~Exoplanet() {};
+	~Exoplanet() { cout << "Exoplanet destructor\n"; };
 
 	//Accessors
 	char getName(void) { return name; };

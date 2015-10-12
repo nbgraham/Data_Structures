@@ -11,6 +11,7 @@ Exosystem::Exosystem(void)
 {
 	starName = "";
 	numberOfPlanets = 0;
+	planets = new MyArray<Exoplanet>();
 }
 
 Exosystem::Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar)
@@ -18,24 +19,25 @@ Exosystem::Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar
 	starName = _starName;
 	numberOfPlanets = _numberOfPlanets;
 	hasSingleStar = _hasSingleStar;
+	planets = new MyArray<Exoplanet>(_numberOfPlanets);
 }
 
 void Exosystem::addPlanet(Exoplanet _exoplanet)
 {
-	if (planets.length() == numberOfPlanets)
+	if (planets->length() == numberOfPlanets)
 	{
 		string message = "Exceeded number of planets in " + starName + " system";
 		throw ValidationException(message);
 	}
 
-	if (planets.indexOf(_exoplanet) >= 0)
+	if (planets->indexOf(_exoplanet) >= 0)
 	{
 		string planetName = { _exoplanet.getName() };
 		string message = "Planet name " + planetName + " is not unique within the system " + starName;
 		throw ValidationException(message);
 	}
 
-	planets.add(_exoplanet);
+	planets->add(_exoplanet);
 }
 
 double Exosystem::calculateAverageMsini(void)
@@ -45,7 +47,7 @@ double Exosystem::calculateAverageMsini(void)
 
 	for (i = 0; i < numberOfPlanets; ++i)
 	{
-		sum += planets.at(i).getMsini();
+		sum += planets->at(i).getMsini();
 	}
 
 	return sum / numberOfPlanets;
@@ -61,7 +63,7 @@ double Exosystem::calculateMaxPer(void)
 
 	for (i = 0; i < numberOfPlanets; ++i)
 	{
-		per = planets.at(i).getPer();
+		per = planets->at(i).getPer();
 		if (per > max)
 		{
 			max = per;
@@ -80,7 +82,7 @@ double Exosystem::calculateMinPer(void)
 
 	for (i = 0; i < numberOfPlanets; ++i)
 	{
-		per = planets.at(i).getPer();
+		per = planets->at(i).getPer();
 		if (per < min)
 		{
 			min = per;
@@ -98,7 +100,7 @@ void Exosystem::printExosystem(void)
 	int i;
 	for (i = 0; i < numberOfPlanets; i++)
 	{
-		planets.at(i).printPlanet();
+		planets->at(i).printPlanet();
 		cout << "\n";
 	}
 	//Two line space between systems
@@ -115,7 +117,7 @@ string Exosystem::toString(void)
 	int i;
 	for (i = 0; i < numberOfPlanets; i++)
 	{
-		result += planets.at(i).toString();
+		result += planets->at(i).toString();
 		result += "\n";
 	}
 	//Two line space between systems

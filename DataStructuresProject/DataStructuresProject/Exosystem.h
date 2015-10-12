@@ -11,7 +11,7 @@ private:
 	string starName;
 	bool hasSingleStar;
 	int numberOfPlanets;
-	MyArray<Exoplanet> planets;
+	MyArray<Exoplanet>* planets;
 public:
 	//Constructors
 	/*
@@ -25,14 +25,14 @@ public:
 	/*
 	Empty destructor
 	*/
-	~Exosystem() {};
+	~Exosystem() { cout << "Exosystem destructor\n"; };
 
 	//Accessors
 	string getStarName(void) { return starName; };
 	bool getHasSingleStar(void) { return hasSingleStar; };
 	int getNumberOfPlanets(void) { return numberOfPlanets; };
-	int getCurrentNumberOfPlanets(void) { return planets.length(); };
-	MyArray<Exoplanet> getPlanets(void) { return planets; };
+	int getCurrentNumberOfPlanets(void) { return planets->length(); };
+	MyArray<Exoplanet> getPlanets(void) { return *planets; };
 
 	//Mutators
 	void setStarName(string _starName) { starName = _starName; };

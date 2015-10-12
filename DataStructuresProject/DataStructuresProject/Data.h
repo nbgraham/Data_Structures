@@ -10,36 +10,44 @@
 class Data
 {
 private:
-	MyArray<Exosystem> exosystems;
-	MyArray<Exoplanet> planets;
+	MyArray<Exosystem>* exosystems;
+	MyArray<Exoplanet>* planets;
 	char isSortedOnKey;
 public:
-	Data() { isSortedOnKey = 0; }
-	~Data() {};
+	Data()
+	{
+		isSortedOnKey = 0;
+		planets = new MyArray<Exoplanet>();
+		exosystems = new MyArray <Exosystem>();
+	}
+	~Data() { cout << "Data destructor called\n"; };
 
 	void outputData(ostream& os)
 	{
 		//Step through all exosystems and print out their info
-		for (int i = 0; i < exosystems.length(); i++)
+		for (int i = 0; i < exosystems->length(); i++)
 		{
-			os << exosystems[i];
+			os << exosystems->at(i);
 		}
 	};
+
 	string toString(void)
 	{
 		string result = "";
 		//Step through all exosystems and print out their info
-		for (int i = 0; i < exosystems.length(); i++)
+		for (int i = 0; i < exosystems->length(); i++)
 		{
-			result += exosystems[i].toString();
+			result += exosystems->at(i).toString();
 		}
 		return result;
 	};
+
 	void sort(char userChoice)
 	{
-		quickSort(planets, 0, planets.length() - 1, userChoice);
+		quickSort(*planets, 0, planets->length() - 1, userChoice);
 		isSortedOnKey = userChoice;
 	};
+
 	/*
 	Adapted from:
 	http://www.algolist.net/Algorithms/Sorting/Quicksort
@@ -76,11 +84,11 @@ public:
 		Exoplanet result;
 		if (isSortedOnKey == sortingKey)
 		{
-			result = binarySearch(key, planets, sortingKey);
+			result = binarySearch(key, *planets, sortingKey);
 		}
 		else
 		{
-			result = linearSearch(key, planets, sortingKey);
+			result = linearSearch(key, *planets, sortingKey);
 		}
 
 		Exosystem* resultP = result.getSystemPointer();
@@ -207,7 +215,7 @@ public:
 					//Validate number of planets in current system
 					if (currentSystem->getCurrentNumberOfPlanets() == currentSystem->getNumberOfPlanets())
 					{
-						exosystems.add(*currentSystem);
+						exosystems->add(*currentSystem);
 					}
 				}
 
@@ -232,7 +240,7 @@ public:
 				try
 				{
 					currentSystem->addPlanet(currentPlanet);
-					planets.add(currentPlanet);
+					planets->add(currentPlanet);
 				}
 				catch (ValidationException exp)
 				{
@@ -245,7 +253,7 @@ public:
 		//Add the last system if it has the right number of planets
 		if (currentSystem->getCurrentNumberOfPlanets() == currentSystem->getNumberOfPlanets())
 		{
-			exosystems.add(*currentSystem);
+			exosystems->add(*currentSystem);
 		}
 
 		inputData.close();
