@@ -146,16 +146,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Data.h" />
     <ClInclude Include="Exoplanet.h" />
     <ClInclude Include="Exosystem.h" />
+    <ClInclude Include="ExosystemShell.h" />
     <ClInclude Include="MyArray.h" />
     <ClInclude Include="ValidationException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Exoplanet.cpp" />
     <ClCompile Include="Exosystem.cpp" />
+    <ClCompile Include="ExosystemShell.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyArray.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

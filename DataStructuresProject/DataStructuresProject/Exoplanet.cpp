@@ -14,6 +14,8 @@ Exoplanet::Exoplanet()
 	om = 0.0;
 	t0 = 0.0;
 	k = 0.0;
+	system = nullptr;
+	starName = "";
 }
 
 Exoplanet::Exoplanet(char _name, double _msini, double _a, double _per, double _ecc, double _om, double _t0, double _k)
@@ -26,6 +28,22 @@ Exoplanet::Exoplanet(char _name, double _msini, double _a, double _per, double _
 	om = _om;
 	t0 = _t0;
 	k = _k;
+	system = nullptr;
+	starName = "";
+}
+
+Exoplanet::Exoplanet(char _name, double _msini, double _a, double _per, double _ecc, double _om, double _t0, double _k, Exosystem* _system, string _starName)
+{
+	name = _name;
+	msini = _msini;
+	a = _a;
+	per = _per;
+	ecc = _ecc;
+	om = _om;
+	t0 = _t0;
+	k = _k;
+	system = _system;
+	starName = _starName;
 }
 
 void Exoplanet::printPlanet(void)
@@ -94,15 +112,20 @@ bool Exoplanet::operator==(Exoplanet& otherPlanet)
 int Exoplanet::compare(Exoplanet & otherPlanet, char sortingKey)
 {
 	int result;
+	string thisName;
+	string otherName;
 
 	switch (sortingKey)
 	{
 	case 'N':
-		if (name > otherPlanet.getName())
+		thisName = getFullName();
+		otherName = otherPlanet.getFullName();
+
+		if (thisName > otherName)
 		{
 			result = 1;
 		}
-		else if (name < otherPlanet.getName())
+		else if (thisName < otherName)
 		{
 			result = -1;
 		}
@@ -216,4 +239,16 @@ int Exoplanet::compare(Exoplanet & otherPlanet, char sortingKey)
 	}
 
 	return result;
+}
+
+string Exoplanet::getFullName(void)
+{
+	if (starName.length() > 0)
+	{
+		return starName + " " + name;
+	}
+	else
+	{
+		return to_string(name);
+	}
 }

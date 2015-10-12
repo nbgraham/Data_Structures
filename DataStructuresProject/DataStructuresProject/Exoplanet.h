@@ -1,6 +1,8 @@
 #pragma once
 using namespace std;
 
+class Exosystem;
+
 class Exoplanet
 {
 private:
@@ -12,16 +14,24 @@ private:
 	double om;
 	double t0;
 	double k;
+	Exosystem* system;
+	string starName;
 public:
 	//Constructors
 	/*
 	Default constructor sets values to 0
 	*/
 	Exoplanet();
+	Exoplanet(char _name, double _msini, double _a, double _per, double _ecc, double _om, double _t0, double _k);
+
 	/*
 	Constructor that sets all the values of the planet
 	*/
-	Exoplanet(char _name, double _msini, double _a, double _per, double _ecc, double _om, double _t0, double _k);
+	Exoplanet(char _name, double _msini, double _a, double _per, double _ecc, double _om, double _t0, double _k, Exosystem* _system, string _starName);
+	/*
+	Empty destructor
+	*/
+	~Exoplanet() {};
 
 	//Accessors
 	char getName(void) { return name; };
@@ -32,6 +42,8 @@ public:
 	double getOm(void) { return om; };
 	double getT0(void) { return t0; };
 	double getK(void) { return k; };
+	Exosystem* getSystemPointer(void) { return system; };
+	string getFullName(void);
 
 	//Mutators
 	void setName(char _name) { name = _name; };
@@ -41,6 +53,7 @@ public:
 	void setOm(double _om) { om = _om; };
 	void setT0(double _t0) { t0 = _t0; };
 	void setK(double _k) { k = _k; };
+	void setSystemPointer(Exosystem* ptr) { system = ptr; };
 
 	/*
 	Prints the information of the planet in comma separated format

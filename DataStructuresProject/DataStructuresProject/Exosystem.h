@@ -5,7 +5,6 @@ using namespace std;
 #include "MyArray.h"
 #include "Exoplanet.h"
 
-
 class Exosystem
 {
 private:
@@ -23,6 +22,10 @@ public:
 	Constructor that sets the values of exosystem
 	*/
 	Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar);
+	/*
+	Empty destructor
+	*/
+	~Exosystem() {};
 
 	//Accessors
 	string getStarName(void) { return starName; };

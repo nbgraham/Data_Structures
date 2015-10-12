@@ -27,6 +27,12 @@
     <ClInclude Include="ValidationException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExosystemShell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Exosystem.cpp">
@@ -38,7 +44,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyArray.cpp">
+    <ClCompile Include="ExosystemShell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
