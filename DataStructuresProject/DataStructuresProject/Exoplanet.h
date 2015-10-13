@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <iostream>
 using namespace std;
 
 class Exosystem;
@@ -23,7 +25,6 @@ public:
 	*/
 	Exoplanet();
 	Exoplanet(char _name, double _msini, double _a, double _per, double _ecc, double _om, double _t0, double _k);
-
 	/*
 	Constructor that sets all the values of the planet
 	*/
@@ -31,19 +32,19 @@ public:
 	/*
 	Empty destructor
 	*/
-	~Exoplanet() { cout << "Exoplanet destructor\n"; };
+	~Exoplanet() {};
 
 	//Accessors
-	char getName(void) { return name; };
-	double getMsini(void) { return msini; };
-	double getA(void) { return a; };
-	double getPer(void) { return per; };
-	double getEcc(void) { return ecc; };
-	double getOm(void) { return om; };
-	double getT0(void) { return t0; };
-	double getK(void) { return k; };
-	Exosystem* getSystemPointer(void) { return system; };
-	string getFullName(void);
+	char getName(void) const { return name; };
+	double getMsini(void) const { return msini; };
+	double getA(void) const { return a; };
+	double getPer(void) const { return per; };
+	double getEcc(void) const { return ecc; };
+	double getOm(void) const { return om; };
+	double getT0(void) const { return t0; };
+	double getK(void) const { return k; };
+	Exosystem* getSystemPointer(void) const	{ return system; };
+	string getFullName(void) const;
 
 	//Mutators
 	void setName(char _name) { name = _name; };
@@ -56,15 +57,11 @@ public:
 	void setSystemPointer(Exosystem* ptr) { system = ptr; };
 
 	/*
-	Prints the information of the planet in comma separated format
-	*/
-	void printPlanet(void);
-	/*
 	Returns a string representation of this planet
 	*/
-	string toString(void);
+	string toString(void) const;
 	/*
-	Overrides the == operator for searching through MyArray<Exoplanet>. Compares solely on planetName
+	Overrides the == operator for searching through Array<Exoplanet>. Compares solely on planetName
 	@param otherPlanet	the planet to compare this to
 	*/
 	bool operator==(Exoplanet& otherPlanet);

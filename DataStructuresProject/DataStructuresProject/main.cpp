@@ -13,88 +13,126 @@ A program that reads exoplanet data, stores it in appropriate data structures, a
 #include <fstream>
 using namespace std;
 
-#include "ValidationException.h"
 #include "Exoplanet.h"
 #include "Exosystem.h"
-#include "ExosystemShell.h"
-#include "MyArray.h"
+#include "Array.h"
 #include "Data.h"
 
 //Object that stores all the data for the exosystems
 Data planetData;
 
+bool dataInputLoop();
 bool dataManipulationLoop();
 Exosystem* search(char userChoice);
-bool is_number(const string& s);
-
+double convertToDouble(const string& s);
+char convertToKey(string input);
+Exoplanet* createSearchValue(string input);
+Exoplanet* createSearchValue(string input, char userChoice);
 
 /*
 The main function that starts this program
 */
 int main()
+{	
+	while (dataInputLoop()) {};
+	if (!planetData.IsEmpty())
+	{
+		while (dataManipulationLoop()) {};
+	}
+	
+	return 0;
+}
+
+bool dataInputLoop()
 {
-	//TODO: User specified files
-	//User enter files until presses enter on blank -> data maniupulation
-	//User enters invalid file, inform them and continue in loop
+	string fileName;
+	cout << "Enter a file name (blank to continue): ";
+	getline(cin, fileName);
+
+	if (fileName == "")
+	{
+		return false;
+	}
 
 	try
 	{
-		planetData.addDataFromFile("data.csv");
-		while (dataManipulationLoop()) {};
+		planetData.addDataFromFile(fileName);
+		cout << "Data from " << fileName << " was read in." << "\n";
 	}
-	catch (ValidationException exp)
+	catch (exception e)
 	{
-		cout << exp.getInfo();
+		cout << e.what() << "\n";
 	}
-	return 0;
+
+	return true;
 }
 
 bool dataManipulationLoop()
 {
+	string input;
 	char userChoice;
 	cout << "--------------------------------------------------------------------------\n";
 	cout << "Choose an option : \n 'P' for print, 'S' for sort, 'F for find, and 'E' for exit.\n";
-	userChoice = cin.get();
-	cin.ignore();
+	getline(cin, input);
+	userChoice = input.at(0);
 
 	if (userChoice == 'P')
 	{
+		//Print
 		cout << planetData.toString();
 	}
 	else if (userChoice == 'S')
 	{
 		//Sort
+		string input;
 		cout << "Choose a value to sort by:\n" << "'N' for name, "
 			<< "'M' for msini, 'A' for a, 'P' for per, 'E' for ecc, 'O' for om, 'T' for T0, or 'K' for k\n";
-		userChoice = cin.get();
-		cin.ignore();
+		getline(cin, input);
 
-		planetData.sort(userChoice);
+		try
+		{
+			planetData.sort(convertToKey(input));
+			cout << "Sorted on " << input << '\n';
+		}
+		catch (exception e)
+		{
+			cout << e.what() << "\n";
+		}
 	}
 	else if (userChoice == 'F')
 	{
 		//Find
+		string input;
 		cout << "Choose a value to search by:\n" << "'N' for name, "
 			<< "'M' for msini, 'A' for a, 'P' for per, 'E' for ecc, 'O' for om, 'T' for T0, or 'K' for k\n";
-		userChoice = cin.get();
-		cin.ignore();
+		getline(cin, input);
 
-		Exosystem* result = search(userChoice);
-
-		if (result == nullptr)
+		try
 		{
-			cout << "Planet not found\n";
-		}
-		else
-		{
-			cout << result->toString() << "\n";
-		}
+			Exosystem* result = search(convertToKey(input));
 
-		return true;
+			if (result == nullptr)
+			{
+				cout << "Planet not found\n";
+			}
+			else
+			{
+				cout << result->toString() << "\n";
+			}
+		}
+		catch (exception e)
+		{
+			cout << e.what() << '\n';
+		}
 	}
 	else if (userChoice == 'E')
 	{
+		//Exit
 		return false;
+	}
+	else
+	{
+		cout << "Invalid choice.\n";
 	}
 
 	return true;
@@ -102,114 +140,123 @@ bool dataManipulationLoop()
 
 Exosystem* search(char userChoice)
 {
-	Exoplanet searchValue;
-	string key;
+	Exoplanet* searchValue = nullptr;
 	string input;
-	double value;
+	string check = "MAPEOTK";
+
 	if (userChoice == 'N')
 	{
-		Exosystem* system = new Exosystem();
-		string starName;
-
+		//Name
 		cout << "Input the name to search by: ";
 		getline(cin, input);
-
-		//Validate name
-		if (input.length() < 2 || input.at(input.length() - 2) != ' ' || input.at(input.length() - 1) == ' ')
-		{
-			//Name is not in correct format, return to data manipulation loop
-			return nullptr;
-		}
 		
-		starName = input.substr(0, input.length() - 2);
-		system->setStarName(starName);
-
-		searchValue = Exoplanet(input.at(input.length() - 1), 0, 0, 0, 0, 0, 0, 0, system, starName);
+		searchValue = createSearchValue(input);
 	}
-	else if (userChoice == 'M' || userChoice == 'A' || userChoice == 'P' || userChoice == 'E' || userChoice == 'O' || userChoice == 'T' || userChoice == 'K')
+	else if (check.find(userChoice) != check.npos)
 	{
-		switch (userChoice)
-		{
-		case 'M':
-			key = "msini";
-			break;
-		case 'A':
-			key = "a";
-			break;
-		case 'P':
-			key = "per";
-			break;
-		case 'E':
-			key = "ecc";
-			break;
-		case 'O':
-			key = "om";
-			break;
-		case 'T':
-			key = "t0";
-			break;
-		case 'K':
-			key = "k";
-			break;
-		}
-		cout << "Input the " << key << " to search by: ";
+		//One of the double attributes was selected
+		cout << "Input the double to search by: ";
 		getline(cin, input);
 
-		try
-		{
-			//Convert to double
-			if (!is_number(input)) throw exception();
-			value = stod(input);
-		}
-		catch (exception e)
-		{
-			cout << "Not valid, cannot be converted to double.\n";
-			return nullptr;
-		}
-
-		switch (userChoice)
-		{
-		case 'M':
-			searchValue = Exoplanet(userChoice, value, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-			break;
-		case 'A':
-			searchValue = Exoplanet(userChoice, 0.0, value, 0.0, 0.0, 0.0, 0.0, 0.0);
-			break;
-		case 'P':
-			searchValue = Exoplanet(userChoice, 0.0, 0.0, value, 0.0, 0.0, 0.0, 0.0);
-			break;
-		case 'E':
-			searchValue = Exoplanet(userChoice, 0.0, 0.0, 0.0, value, 0.0, 0.0, 0.0);
-			break;
-		case 'O':
-			searchValue = Exoplanet(userChoice, 0.0, 0.0, 0.0, 0.0, value, 0.0, 0.0);
-			break;
-		case 'T':
-			searchValue = Exoplanet(userChoice, 0.0, 0.0, 0.0, 0.0, 0.0, value, 0.0);
-			break;
-		case 'K':
-			searchValue = Exoplanet(userChoice, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, value);
-			break;
-		}
+		searchValue = createSearchValue(input, userChoice);
+	}
+	else
+	{
+		throw exception("Invalid choice.");
 	}
 
-	return planetData.search(searchValue, userChoice);
+	return planetData.search(*searchValue, userChoice);
 }
 
 /*
 Code adapted from:
 http://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
 */
-bool is_number(const string& s)
+double convertToDouble(const string& s)
 {
+	bool encounteredDecimal = false;
 	string::const_iterator it = s.begin();
 	while (it != s.end())
 	{
-		if (isalpha(*it))
+		if (!isdigit(*it))
 		{
-			return false;
+			if (*it == '.')
+			{
+				if (encounteredDecimal) throw exception("Too many decimal points.");
+				else encounteredDecimal = true;
+			}
+			else throw exception("Input has invalid characters.");
 		}
+	
 		++it;
 	}
-	return true;
+
+	return stod(s);
+}
+
+char convertToKey(string input)
+{
+	char userChoice;
+	if (input.length() > 1) throw exception("Entry has more than one character.");
+	else
+	{
+		userChoice = input.at(0);
+		string check = "NMAPEOTK";
+		if (check.find(userChoice, 0) == check.npos)
+		{
+			throw exception("Invalid choice.");
+		}
+	}
+
+	return userChoice;
+}
+
+Exoplanet* createSearchValue(string input)
+{
+	//Validate name
+	if (input.length() < 2 || input.at(input.length() - 2) != ' ' || input.at(input.length() - 1) == ' ')
+	{
+		//Name is not in correct format, return to data manipulation loop
+		throw exception("Name is not in correct format.");
+	}
+
+	Exosystem* system = new Exosystem();
+	string starName = input.substr(0, input.length() - 2);
+
+	system->setStarName(starName);
+
+	return new Exoplanet(input.at(input.length() - 1), 0, 0, 0, 0, 0, 0, 0, system, starName);
+}
+
+Exoplanet* createSearchValue(string input, char userChoice)
+{
+	double value = convertToDouble(input);
+
+	switch (userChoice)
+	{
+	case 'M':
+		return new Exoplanet(userChoice, value, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+		break;
+	case 'A':
+		return new Exoplanet(userChoice, 0.0, value, 0.0, 0.0, 0.0, 0.0, 0.0);
+		break;
+	case 'P':
+		return new Exoplanet(userChoice, 0.0, 0.0, value, 0.0, 0.0, 0.0, 0.0);
+		break;
+	case 'E':
+		return new Exoplanet(userChoice, 0.0, 0.0, 0.0, value, 0.0, 0.0, 0.0);
+		break;
+	case 'O':
+		return new Exoplanet(userChoice, 0.0, 0.0, 0.0, 0.0, value, 0.0, 0.0);
+		break;
+	case 'T':
+		return new Exoplanet(userChoice, 0.0, 0.0, 0.0, 0.0, 0.0, value, 0.0);
+		break;
+	case 'K':
+		return new Exoplanet(userChoice, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, value);
+		break;
+	default:
+		return nullptr;
+		break;
+	}
 }

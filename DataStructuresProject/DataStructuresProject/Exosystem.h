@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
+#include <iostream>
+
 using namespace std;
 
-#include "MyArray.h"
+#include "Array.h"
 #include "Exoplanet.h"
 
 class Exosystem
@@ -11,7 +13,7 @@ private:
 	string starName;
 	bool hasSingleStar;
 	int numberOfPlanets;
-	MyArray<Exoplanet>* planets;
+	Array<Exoplanet*>* planets;
 public:
 	//Constructors
 	/*
@@ -23,16 +25,17 @@ public:
 	*/
 	Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar);
 	/*
-	Empty destructor
+	Destructor
+	Deletes the two arrays that were created in the constructor
 	*/
-	~Exosystem() { cout << "Exosystem destructor\n"; };
+	~Exosystem();
 
 	//Accessors
-	string getStarName(void) { return starName; };
-	bool getHasSingleStar(void) { return hasSingleStar; };
-	int getNumberOfPlanets(void) { return numberOfPlanets; };
-	int getCurrentNumberOfPlanets(void) { return planets->length(); };
-	MyArray<Exoplanet> getPlanets(void) { return *planets; };
+	string getStarName(void) const { return starName; };
+	bool getHasSingleStar(void) const { return hasSingleStar; };
+	int getNumberOfPlanets(void) const { return numberOfPlanets; };
+	int getCurrentNumberOfPlanets(void) const { return planets->size(); };
+	Array<Exoplanet*> getPlanets(void) const { return *planets; };
 
 	//Mutators
 	void setStarName(string _starName) { starName = _starName; };
@@ -44,32 +47,33 @@ public:
 	Then adds the planet to the list of planets
 	@param _exoplanet	the planet to be added
 	*/
-	void addPlanet(Exoplanet _exoplanet);
+	void addPlanet(Exoplanet* _exoplanet);
 	/*
 	Iterates over the planets in this system and calculates the average msini
 	*/
-	double calculateAverageMsini(void);
+	double calculateAverageMsini(void) const;
 	/*
 	Iterates over the planets in this system and calculates the max per
 	*/
-	double calculateMaxPer(void);
+	double calculateMaxPer(void) const;
 	/*
 	Iterates over the planets in this system and calculates the average msini
 	*/
-	double calculateMinPer(void);
-	/*
-	Prints an exosystem summary and then iterates over all the planets, calling their print methods
-	*/
-	void printExosystem(void);
+	double calculateMinPer(void) const;
 	/*
 	Returns a string representation of the Exosystem, calling the toString method on all its planets
 	*/
-	string toString(void);
+	string toString(void) const;
 	/*
-	Overrides the == operator for searching through MyArray<Exosystem>. Compares solely on starName
+	Overrides the == operator for searching through Array<Exosystem>. Compares solely on starName
 	@param otherExosystem	the system to compare this to
 	*/
-	bool operator==(Exosystem otherExosystem);
+	bool operator==(Exosystem otherExosystem) const;
+	/*
+	Returns true if there is a planet in this system with the specified name
+	Else returns false
+	*/
+	bool nameExists(char name) const;
 	/*
 	Prints the string representation of the specified exosystem to the os output stream
 	*/

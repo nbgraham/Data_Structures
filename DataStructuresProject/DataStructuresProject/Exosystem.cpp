@@ -1,17 +1,10 @@
-#include <string>
-#include <iostream>
-
-using namespace std;
-
-#include "ValidationException.h"
 #include "Exosystem.h"
-#include "Exoplanet.h"
 
 Exosystem::Exosystem(void)
 {
 	starName = "";
 	numberOfPlanets = 0;
-	planets = new MyArray<Exoplanet>();
+	planets = new Array<Exoplanet*>();
 }
 
 Exosystem::Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar)
@@ -19,42 +12,48 @@ Exosystem::Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar
 	starName = _starName;
 	numberOfPlanets = _numberOfPlanets;
 	hasSingleStar = _hasSingleStar;
-	planets = new MyArray<Exoplanet>(_numberOfPlanets);
+	planets = new Array<Exoplanet*>(_numberOfPlanets);
 }
 
-void Exosystem::addPlanet(Exoplanet _exoplanet)
+Exosystem::~Exosystem()
 {
-	if (planets->length() == numberOfPlanets)
+	if (planets != nullptr)
 	{
-		string message = "Exceeded number of planets in " + starName + " system";
-		throw ValidationException(message);
+		delete planets;
+		planets = nullptr;
+	}
+}
+
+void Exosystem::addPlanet(Exoplanet* _exoplanet)
+{
+	if (planets->size() == numberOfPlanets)
+	{
+		throw exception("Too many planets listed for this system.");
 	}
 
-	if (planets->indexOf(_exoplanet) >= 0)
+	if (nameExists(_exoplanet->getName()))
 	{
-		string planetName = { _exoplanet.getName() };
-		string message = "Planet name " + planetName + " is not unique within the system " + starName;
-		throw ValidationException(message);
+		throw exception("Planet name is not unique within the system.");
 	}
 
 	planets->add(_exoplanet);
 }
 
-double Exosystem::calculateAverageMsini(void)
+double Exosystem::calculateAverageMsini(void) const
 {
 	double sum = 0;
 	int i;
 
 	for (i = 0; i < numberOfPlanets; ++i)
 	{
-		sum += planets->at(i).getMsini();
+		sum += planets->at(i)->getMsini();
 	}
 
 	return sum / numberOfPlanets;
 
 }
 
-double Exosystem::calculateMaxPer(void)
+double Exosystem::calculateMaxPer(void) const
 {
 	//The orbital period of the planet in days will always be positive so the minimum value is 0
 	double max = 0;
@@ -63,7 +62,7 @@ double Exosystem::calculateMaxPer(void)
 
 	for (i = 0; i < numberOfPlanets; ++i)
 	{
-		per = planets->at(i).getPer();
+		per = planets->at(i)->getPer();
 		if (per > max)
 		{
 			max = per;
@@ -73,7 +72,7 @@ double Exosystem::calculateMaxPer(void)
 	return max;
 }
 
-double Exosystem::calculateMinPer(void)
+double Exosystem::calculateMinPer(void) const
 {
 	//Set to the largest possible double
 	double min = DBL_MAX;
@@ -82,7 +81,7 @@ double Exosystem::calculateMinPer(void)
 
 	for (i = 0; i < numberOfPlanets; ++i)
 	{
-		per = planets->at(i).getPer();
+		per = planets->at(i)->getPer();
 		if (per < min)
 		{
 			min = per;
@@ -92,23 +91,7 @@ double Exosystem::calculateMinPer(void)
 	return min;
 }
 
-void Exosystem::printExosystem(void)
-{
-	cout << starName + "," + to_string(numberOfPlanets) + "," + to_string(calculateAverageMsini()) + "," + to_string(calculateMaxPer()) + "," + to_string(calculateMinPer());
-	cout << "\n";
-
-	int i;
-	for (i = 0; i < numberOfPlanets; i++)
-	{
-		planets->at(i).printPlanet();
-		cout << "\n";
-	}
-	//Two line space between systems
-	cout << "\n\n";
-	return;
-}
-
-string Exosystem::toString(void)
+string Exosystem::toString(void) const
 {
 	string result;
 	result += starName + "," + to_string(numberOfPlanets) + "," + to_string(calculateAverageMsini()) + "," + to_string(calculateMaxPer()) + "," + to_string(calculateMinPer());
@@ -117,7 +100,7 @@ string Exosystem::toString(void)
 	int i;
 	for (i = 0; i < numberOfPlanets; i++)
 	{
-		result += planets->at(i).toString();
+		result += planets->at(i)->toString();
 		result += "\n";
 	}
 	//Two line space between systems
@@ -125,11 +108,21 @@ string Exosystem::toString(void)
 	return result;
 }
 
-bool Exosystem::operator==(Exosystem otherExosystem)
+bool Exosystem::operator==(Exosystem otherExosystem) const
 {
 	if (starName == otherExosystem.getStarName())
 	{
 		return true;
+	}
+
+	return false;
+}
+
+bool Exosystem::nameExists(char name) const
+{
+	for (int i = 0; i < planets->size(); i++)
+	{
+		if (planets->at(i)->getName() == name) return true;
 	}
 
 	return false;
