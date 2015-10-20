@@ -6,6 +6,7 @@ using namespace std;
 
 #include "Array.h"
 #include "Exoplanet.h"
+#include "PlanetPointerLinkedList.h"
 
 class Exosystem
 {
@@ -13,7 +14,7 @@ private:
 	string starName;
 	bool hasSingleStar;
 	int numberOfPlanets;
-	Array<Exoplanet*>* planets;
+	PlanetPointerLinkedList* planets;
 public:
 	//Constructors
 	/*
@@ -35,7 +36,7 @@ public:
 	bool getHasSingleStar(void) const { return hasSingleStar; };
 	int getNumberOfPlanets(void) const { return numberOfPlanets; };
 	int getCurrentNumberOfPlanets(void) const { return planets->size(); };
-	Array<Exoplanet*> getPlanets(void) const { return *planets; };
+	LinkedList<Exoplanet*> getPlanets(void) const { return *planets; };
 
 	//Mutators
 	void setStarName(string _starName) { starName = _starName; };
@@ -48,6 +49,9 @@ public:
 	@param _exoplanet	the planet to be added
 	*/
 	void addPlanet(Exoplanet* _exoplanet);
+	void removePlanet(Exoplanet* _exoplanet);
+	void overwritePlanet(Exoplanet* _exoplanet);
+
 	/*
 	Iterates over the planets in this system and calculates the average msini
 	*/
@@ -68,7 +72,10 @@ public:
 	Overrides the == operator for searching through Array<Exosystem>. Compares solely on starName
 	@param otherExosystem	the system to compare this to
 	*/
-	bool operator==(Exosystem otherExosystem) const;
+	bool operator==(Exosystem& otherExosystem) const;
+	bool operator!=(Exosystem& otherExosystem) const;
+	bool operator<(Exosystem& otherExosystem) const;
+	bool operator>(Exosystem& otherExosystem) const;
 	/*
 	Returns true if there is a planet in this system with the specified name
 	Else returns false

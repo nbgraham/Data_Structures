@@ -65,6 +65,8 @@ public:
 	@param otherPlanet	the planet to compare this to
 	*/
 	bool operator==(Exoplanet& otherPlanet);
+	bool operator<(Exoplanet& otherPlanet);
+	bool operator>(Exoplanet& otherPlanet);
 	/*
 	Compares this planet with otherPlanet based on the sortingKey value
 	Returns -1 if this comes before

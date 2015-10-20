@@ -6,11 +6,12 @@ using namespace std;
 #include "Exoplanet.h"
 #include "Exosystem.h"
 #include "Array.h"
+#include "LinkedList.h"
 
 class Data
 {
 private:
-	Array<Exosystem*>* exosystems;
+	LinkedListPtrs<Exosystem>* exosystems;
 	Array<Exoplanet*>* planets;
 	char isSortedOnKey;
 	bool isEmpty;
@@ -30,12 +31,14 @@ public:
 	/*
 	Reads in data from the data file and fills both arrays in this object
 	*/
-	void addDataFromFile(string inputFileName);
+	void changeDataFromFile(string inputFileName, char type);
 	/*
 	Adds the specified Exoplanet point to the specified system in the exosystems array in this object
 	Adds the specified Exoplanet pointer to the list of planets in this object
 	*/
-	void addPlanetToSystem(Exoplanet* planet, Exosystem* system);
+	void addPlanetToSystem(Exoplanet* planet, Exosystem* system, char type);
+	void removePlanetFromSystem(Exoplanet* planet, Exosystem* system);
+
 	/*
 	Sorts the list of planets based on the selected key
 	*/

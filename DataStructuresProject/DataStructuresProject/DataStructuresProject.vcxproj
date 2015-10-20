@@ -150,12 +150,24 @@
     <ClInclude Include="Exoplanet.h" />
     <ClInclude Include="Exosystem.h" />
     <ClInclude Include="Array.h" />
+    <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="LinkedListPtrs.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="PlanetPointerLinkedList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="Exoplanet.cpp" />
     <ClCompile Include="Exosystem.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data.csv" />
+    <None Include="test.csv" />
+    <None Include="testFull.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="output.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

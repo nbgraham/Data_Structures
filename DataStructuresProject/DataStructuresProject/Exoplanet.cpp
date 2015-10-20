@@ -52,12 +52,17 @@ string Exoplanet::toString(void) const
 
 bool Exoplanet::operator==(Exoplanet& otherPlanet)
 {
-	if (name == otherPlanet.name)
-	{
-		return true;
-	}
+	return name == otherPlanet.name;
+}
 
-	return false;
+bool Exoplanet::operator<(Exoplanet& otherPlanet)
+{
+	return name < otherPlanet.name;
+}
+
+bool Exoplanet::operator>(Exoplanet& otherPlanet)
+{
+	return name > otherPlanet.name;
 }
 
 int Exoplanet::compare(Exoplanet& otherPlanet, char sortingKey)

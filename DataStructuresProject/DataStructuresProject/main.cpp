@@ -17,11 +17,12 @@ using namespace std;
 #include "Exosystem.h"
 #include "Array.h"
 #include "Data.h"
+#include "LinkedList.h"
 
 //Object that stores all the data for the exosystems
 Data planetData;
 
-bool dataInputLoop();
+void changeDataFromFile(char type);
 bool dataManipulationLoop();
 Exosystem* search(char userChoice);
 double convertToDouble(const string& s);
@@ -33,8 +34,10 @@ Exoplanet* createSearchValue(string input, char userChoice);
 The main function that starts this program
 */
 int main()
-{	
-	while (dataInputLoop()) {};
+{
+	//Initial data entry
+	changeDataFromFile('A');
+
 	if (!planetData.IsEmpty())
 	{
 		while (dataManipulationLoop()) {};
@@ -43,28 +46,32 @@ int main()
 	return 0;
 }
 
-bool dataInputLoop()
+void changeDataFromFile(char type)
 {
 	string fileName;
-	cout << "Enter a file name (blank to continue): ";
-	getline(cin, fileName);
+	bool redo = false;
 
-	if (fileName == "")
+	do
 	{
-		return false;
-	}
+		cout << "Enter a file name (blank to continue): ";
+		getline(cin, fileName);
 
-	try
-	{
-		planetData.addDataFromFile(fileName);
-		cout << "Data from " << fileName << " was read in." << "\n";
-	}
-	catch (exception e)
-	{
-		cout << e.what() << "\n";
-	}
+		if (fileName == "")
+		{
+			break;
+		}
 
-	return true;
+		try
+		{
+			planetData.changeDataFromFile(fileName, type);
+			cout << "Data from " << fileName << " was read." << "\n";
+		}
+		catch (exception e)
+		{
+			cout << e.what() << "\n";
+			redo = true;
+		}
+	} while (redo);
 }
 
 bool dataManipulationLoop()
@@ -72,13 +79,14 @@ bool dataManipulationLoop()
 	string input;
 	char userChoice;
 	cout << "--------------------------------------------------------------------------\n";
-	cout << "Choose an option : \n 'P' for print, 'S' for sort, 'F for find, and 'E' for exit.\n";
+	//TODO: change options
+	cout << "Choose an option : \n 'W' for write, 'S' for sort, 'F for find, 'M' for merge, 'P' for purge, and 'E' for exit.\n";
 	getline(cin, input);
 	userChoice = input.at(0);
 
-	if (userChoice == 'P')
+	if (userChoice == 'W')
 	{
-		//Print
+		//Write
 		cout << planetData.toString();
 	}
 	else if (userChoice == 'S')
@@ -124,6 +132,16 @@ bool dataManipulationLoop()
 		{
 			cout << e.what() << '\n';
 		}
+	}
+	else if (userChoice == 'M')
+	{
+		//Merge
+		changeDataFromFile('M');
+	}
+	else if (userChoice == 'P')
+	{
+		//Purge
+		changeDataFromFile('P');
 	}
 	else if (userChoice == 'E')
 	{
