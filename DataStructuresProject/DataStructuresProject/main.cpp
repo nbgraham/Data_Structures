@@ -19,12 +19,9 @@ using namespace std;
 #include "Data.h"
 #include "LinkedList.h"
 
-//Object that stores all the data for the exosystems
-Data planetData;
-
-void changeDataFromFile(char type);
-bool dataManipulationLoop();
-Exosystem* search(char userChoice);
+void changeDataFromFile(char type, Data& planetData);
+bool dataManipulationLoop(Data& planetData);
+Exosystem* search(char userChoice, Data& planetData);
 double convertToDouble(const string& s);
 char convertToKey(string input);
 Exoplanet* createSearchValue(string input);
@@ -35,18 +32,21 @@ The main function that starts this program
 */
 int main()
 {
+	//Object that stores all the data for the exosystems
+	Data planetData;
+
 	//Initial data entry
-	changeDataFromFile('A');
+	changeDataFromFile('A', planetData);
 
 	if (!planetData.IsEmpty())
 	{
-		while (dataManipulationLoop()) {};
+		while (dataManipulationLoop(planetData)) {};
 	}
 	
 	return 0;
 }
 
-void changeDataFromFile(char type)
+void changeDataFromFile(char type, Data& planetData)
 {
 	string fileName;
 	bool redo = false;
@@ -74,7 +74,7 @@ void changeDataFromFile(char type)
 	} while (redo);
 }
 
-bool dataManipulationLoop()
+bool dataManipulationLoop(Data& planetData)
 {
 	string input;
 	char userChoice;
@@ -117,7 +117,7 @@ bool dataManipulationLoop()
 
 		try
 		{
-			Exosystem* result = search(convertToKey(input));
+			Exosystem* result = search(convertToKey(input), planetData);
 
 			if (result == nullptr)
 			{
@@ -136,12 +136,12 @@ bool dataManipulationLoop()
 	else if (userChoice == 'M')
 	{
 		//Merge
-		changeDataFromFile('M');
+		changeDataFromFile('M', planetData);
 	}
 	else if (userChoice == 'P')
 	{
 		//Purge
-		changeDataFromFile('P');
+		changeDataFromFile('P', planetData);
 	}
 	else if (userChoice == 'E')
 	{
@@ -156,7 +156,7 @@ bool dataManipulationLoop()
 	return true;
 }
 
-Exosystem* search(char userChoice)
+Exosystem* search(char userChoice, Data& planetData)
 {
 	Exoplanet* searchValue = nullptr;
 	string input;

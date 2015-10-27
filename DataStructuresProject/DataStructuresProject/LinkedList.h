@@ -15,7 +15,7 @@ public:
 	LinkedList();
 	~LinkedList();
 	void add(T& data);
-	bool remove(T& data);
+	void remove(T& data);
 	Node<T>* getHead() { return head };
 	string toString() const;
 	int size() { return length; };
@@ -71,11 +71,11 @@ inline LinkedList<T>::~LinkedList()
 }
 
 template<typename T>
-inline bool LinkedList<T>::remove(T& data)
+inline void LinkedList<T>::remove(T& data)
 {
 	if (length == 0)
 	{
-		return false;
+		throw exception("Item to be removed was not in linked list");
 	}
 	else
 	{
@@ -97,7 +97,7 @@ inline bool LinkedList<T>::remove(T& data)
 
 			if (prev->next == nullptr)
 			{
-				return false;
+				throw exception("Item to be removed was not in linked list");
 			}
 			else
 			{
@@ -108,7 +108,6 @@ inline bool LinkedList<T>::remove(T& data)
 		}
 
 		length--;
-		return true;
 	}
 }
 

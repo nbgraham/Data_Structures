@@ -47,6 +47,7 @@ public:
 					length--;
 					return true;
 				}
+				prev = prev->next;
 			}
 		}
 

@@ -77,6 +77,8 @@ Exosystem* Data::search(Exoplanet& key, char sortingKey) const
 		result = linearSearch(key, *planets, sortingKey);
 	}
 
+	if (result == nullptr) return nullptr;
+
 	Exosystem* resultP = result->getSystemPointer();
 	return resultP;
 }
