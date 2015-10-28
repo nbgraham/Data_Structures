@@ -151,9 +151,8 @@
     <ClInclude Include="Exosystem.h" />
     <ClInclude Include="Array.h" />
     <ClInclude Include="LinkedList.h" />
-    <ClInclude Include="LinkedListPtrs.h" />
+    <ClInclude Include="LinkedListIterator.h" />
     <ClInclude Include="Node.h" />
-    <ClInclude Include="PlanetPointerLinkedList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data.cpp" />

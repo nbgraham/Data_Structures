@@ -4,7 +4,7 @@ Exosystem::Exosystem(void)
 {
 	starName = "";
 	numberOfPlanets = 0;
-	planets = new PlanetPointerLinkedList();
+	planets = new LinkedList<Exoplanet>();
 }
 
 Exosystem::Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar)
@@ -12,7 +12,15 @@ Exosystem::Exosystem(string _starName, int _numberOfPlanets, bool _hasSingleStar
 	starName = _starName;
 	numberOfPlanets = _numberOfPlanets;
 	hasSingleStar = _hasSingleStar;
-	planets = new PlanetPointerLinkedList();
+	planets = new LinkedList<Exoplanet>();
+}
+
+Exosystem::Exosystem(const Exosystem & other)
+{
+	starName = other.getStarName();
+	hasSingleStar = other.getHasSingleStar();
+	numberOfPlanets = other.getNumberOfPlanets();
+	planets = new LinkedList<Exoplanet>(other.getPlanets());
 }
 
 Exosystem::~Exosystem()
@@ -36,32 +44,61 @@ void Exosystem::addPlanet(Exoplanet* _exoplanet)
 		throw exception("Planet name is not unique within the system.");
 	}
 
-	planets->add(_exoplanet);
-}
-
-void Exosystem::overwritePlanet(Exoplanet* _exoplanet)
-{
-	planets->overwritePlanet(_exoplanet);
+	planets->add(*_exoplanet);
 }
 
 void Exosystem::removePlanet(Exoplanet* _exoplanet)
 {
-	planets->removePlanet(_exoplanet);
+	planets->remove(*_exoplanet);
 }
 
 double Exosystem::calculateAverageMsini(void) const
 {
-	return planets->calculateAverageMsini();
+	double sum = 0;
+	Node<Exoplanet>* curr = planets->getHead();
+	while (curr != nullptr)
+	{
+		sum += curr->data.getMsini();
+		curr = curr->next;
+	}
+
+	return sum / planets->size();
 }
 
 double Exosystem::calculateMaxPer(void) const
 {
-	return planets->calculateMaxPer();
+	double maxPer = 0;
+	double currPer;
+	Node<Exoplanet>* curr = planets->getHead();
+	while (curr != nullptr)
+	{
+		currPer = curr->data.getPer();
+		if (currPer > maxPer)
+		{
+			maxPer = currPer;
+		}
+		curr = curr->next;
+	}
+
+	return maxPer;
 }
 
 double Exosystem::calculateMinPer(void) const
 {
-	return planets->calculateMinPer();
+	double minPer = DBL_MAX;
+	double currPer;
+	Node<Exoplanet>* curr = planets->getHead();
+	while (curr != nullptr)
+	{
+		currPer = curr->data.getPer();
+		if (currPer < minPer)
+		{
+			minPer = currPer;
+		}
+		curr = curr->next;
+	}
+
+	return minPer;
 }
 
 string Exosystem::toString(void) const
@@ -70,7 +107,11 @@ string Exosystem::toString(void) const
 	result += starName + "," + to_string(numberOfPlanets) + "," + to_string(calculateAverageMsini()) + "," + to_string(calculateMaxPer()) + "," + to_string(calculateMinPer());
 	result += "\n";
 
-	result += planets->toString();
+	LinkedListIterator<Exoplanet> it = LinkedListIterator<Exoplanet>(planets);
+	while (it.hasNext())
+	{
+		result += it.getNext()->toString() + "\n";
+	}
 
 	//Two line space between systems
 	result += "\n";
@@ -99,5 +140,26 @@ bool Exosystem::operator>(Exosystem& otherExosystem) const
 
 bool Exosystem::nameExists(char name) const
 {
-	return planets->nameExists(name);
-}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+	Node<Exoplanet>* curr = planets->getHead();
+	while (curr != nullptr)
+	{
+		if (curr->data.getName() == name) return true;
+		curr = curr->next;
+	}
+	return false;
+}
+
+void Exosystem::overwritePlanet(Exoplanet* planet)
+{
+	Node<Exoplanet>* curr = planets->getHead();
+	while (curr != nullptr)
+	{
+		if (curr->data.getName() == planet->getName())
+		{
+			curr->data = *planet;
+			break;
+		}
+		curr = curr->next;
+	}
+	if (curr == nullptr) throw exception("Specified planet name was not in the linked list.");
+}

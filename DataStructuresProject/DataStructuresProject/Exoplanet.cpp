@@ -55,6 +55,11 @@ bool Exoplanet::operator==(Exoplanet& otherPlanet)
 	return name == otherPlanet.name;
 }
 
+bool Exoplanet::operator!=(Exoplanet& otherPlanet)
+{
+	return name != otherPlanet.name;
+}
+
 bool Exoplanet::operator<(Exoplanet& otherPlanet)
 {
 	return name < otherPlanet.name;

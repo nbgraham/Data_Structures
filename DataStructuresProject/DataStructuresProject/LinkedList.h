@@ -12,14 +12,34 @@ protected:
 	Node<T>* head;
 	int length;
 public:
+	/*
+	Default constructor*/
 	LinkedList();
+	/*
+	Copy constructor*/
+	LinkedList(LinkedList<T>& list);
+	/*
+	Destructor*/
 	~LinkedList();
-	void add(T& data);
-	void remove(T& data);
-	Node<T>* getHead() { return head };
+
+	/*
+	Returns a pointer to the list's head*/
+	Node<T>* getHead() { return head; };
+	/*
+	Returns a string representation of this list*/
 	string toString() const;
+	/*
+	Returns the size of this list*/
 	int size() { return length; };
-	T search(T& data) const;
+	/*
+	Adds the specified item to the list, in the correct spot to retain sorted order*/
+	void add(T& data);
+	/*
+	Removes the specified item from the list*/
+	void remove(T& data);
+	/*
+	Returns a pointer to an object in the list that matches the specified data*/
+	T* search(T& data) const;
 };
 
 template<typename T>
@@ -27,6 +47,30 @@ inline LinkedList<T>::LinkedList()
 {
 	head = nullptr;
 	length = 0;
+}
+
+template<typename T>
+inline LinkedList<T>::LinkedList(LinkedList<T>& list)
+{
+	if (list.getHead() == nullptr)
+	{
+		head = nullptr;
+		length = 0;
+		return;
+	}
+	else
+	{
+		head = new Node<T>(list.getHead()->data, list.getHead()->next);
+		length = 1;
+	}
+
+	Node<T>* curr = head;
+	while (curr->next != nullptr)
+	{
+		curr->next = new Node<T>(curr->next->data, curr->next->next);
+		length++;
+		curr = curr->next;
+	}
 }
 
 template<typename T>
@@ -127,7 +171,7 @@ inline string LinkedList<T>::toString() const
 }
 
 template<typename T>
-inline T LinkedList<T>::search(T& data) const
+inline T* LinkedList<T>::search(T& data) const
 {
 	Node<T>* temp = head;
 	while (temp != nullptr && temp->data != data)
@@ -139,5 +183,5 @@ inline T LinkedList<T>::search(T& data) const
 	{
 		return nullptr;
 	}
-	return temp->data;
+	return &temp->data;
 }

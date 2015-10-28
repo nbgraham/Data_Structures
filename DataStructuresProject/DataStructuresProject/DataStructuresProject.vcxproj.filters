@@ -33,10 +33,7 @@
     <ClInclude Include="LinkedList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlanetPointerLinkedList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkedListPtrs.h">
+    <ClInclude Include="LinkedListIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

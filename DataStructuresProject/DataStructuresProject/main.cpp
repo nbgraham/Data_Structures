@@ -1,5 +1,5 @@
 /*
-Project 0
+Project 2
 CS 2413
 Dean Hougen
 Fall 2015
@@ -79,9 +79,9 @@ bool dataManipulationLoop(Data& planetData)
 	string input;
 	char userChoice;
 	cout << "--------------------------------------------------------------------------\n";
-	//TODO: change options
 	cout << "Choose an option : \n 'W' for write, 'S' for sort, 'F for find, 'M' for merge, 'P' for purge, and 'E' for exit.\n";
 	getline(cin, input);
+	if (input.length() < 1) return true;
 	userChoice = input.at(0);
 
 	if (userChoice == 'W')

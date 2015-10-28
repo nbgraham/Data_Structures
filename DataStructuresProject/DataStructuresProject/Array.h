@@ -12,15 +12,12 @@ private:
 	int capacity;
 	void resize();
 public:
-	//Constructors
 	/*
-	Default constructor
-	*/
+	Default constructor*/
 	Array(void);
 	/*
 	Constructor that specifies the initial capacity
-	@param _capacity	the initial capacity
-	*/
+	@param _capacity	the initial capacity*/
 	Array(int _capacity);
 	/*
 	Destructor*/
@@ -29,46 +26,37 @@ public:
 	/*
 	Adds the element to the end of the array
 	If the array is full, it allocates a new array with twice the size, copies over the old elements and adds the new one
-	@param newElement	the element to be added
-	*/
+	@param newElement	the element to be added*/
 	void add(dataType newElement);
 	/*
 	Removes the specified element from the array and shifts all the elements accordingly
-	@param element	the element to be removed
-	*/
+	@param element	the element to be removed*/
 	void remove(dataType element);
 	/*
 	Removes the element at the specified index and shifts all the elements accordingly
-	@param index	the specified index
-	*/
+	@param index	the specified index*/
 	void removeAt(int index);
 	/*
 	Returns the element at the specified index.
 	@param index	the specified index
-	@return	the value at that index
-	*/
+	@return	the value at that index*/
 	dataType at(int index) const;
 	/*
 	Returns the index of the specified element, or -1 if it is not in the array
 	@param element	the specified element
-	@return	the index of the specified element
-	*/
+	@return	the index of the specified element*/
 	int indexOf(dataType element) const;
 	/*
-	Returns the current length of this array
-	*/
+	Returns the current length of this array*/
 	int size(void) { return sze; };
 	/*
-	Returns a string representation of this array
-	*/
+	Returns a string representation of this array*/
 	string toString(void) const;
 	/*
-	Returns the element at the specified index
-	*/
+	Returns the element at the specified index*/
 	dataType operator[](int index) const;
 	/*
-	Swaps the elements in the two specified positions
-	*/
+	Swaps the elements in the two specified positions*/
 	void swap(int index0, int index1);
 };
 
@@ -93,7 +81,7 @@ Array<dataType>::~Array(void)
 {
 	if (arr != NULL)
 	{
-		delete arr;
+		delete[] arr;
 		arr = NULL;
 	}
 }
@@ -123,7 +111,7 @@ void Array<dataType>::resize()
 	{
 		arr[i] = temp[i];
 	}
-	delete temp;
+	delete[] temp;
 	capacity *= 2;
 }
 

@@ -19,11 +19,13 @@ private:
 	Exosystem* system;
 	string starName;
 public:
-	//Constructors
 	/*
 	Default constructor sets values to 0
 	*/
 	Exoplanet();
+	/*
+	Constructor that sets specific values of the planet
+	*/
 	Exoplanet(char _name, double _msini, double _a, double _per, double _ecc, double _om, double _t0, double _k);
 	/*
 	Constructor that sets all the values of the planet
@@ -33,7 +35,6 @@ public:
 	Empty destructor
 	*/
 	~Exoplanet() {};
-
 	//Accessors
 	char getName(void) const { return name; };
 	double getMsini(void) const { return msini; };
@@ -65,7 +66,17 @@ public:
 	@param otherPlanet	the planet to compare this to
 	*/
 	bool operator==(Exoplanet& otherPlanet);
+	/*
+	Compares on planetName
+	*/
+	bool operator!=(Exoplanet& otherPlanet);
+	/*
+	Compares on planetName
+	*/
 	bool operator<(Exoplanet& otherPlanet);
+	/*
+	Compares on planetName
+	*/
 	bool operator>(Exoplanet& otherPlanet);
 	/*
 	Compares this planet with otherPlanet based on the sortingKey value

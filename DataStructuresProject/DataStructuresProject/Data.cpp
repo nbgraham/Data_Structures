@@ -5,7 +5,7 @@ Data::Data()
 	isEmpty = true;
 	isSortedOnKey = 0;
 	planets = new Array<Exoplanet*>();
-	exosystems = new LinkedListPtrs <Exosystem>();
+	exosystems = new LinkedList <Exosystem>();
 }
 
 Data::~Data() {
@@ -14,6 +14,7 @@ Data::~Data() {
 		delete planets;
 		planets = nullptr;
 	}
+
 	if (exosystems != nullptr)
 	{
 		delete exosystems;
@@ -23,7 +24,15 @@ Data::~Data() {
 
 string Data::toString(void) const
 {
-	string result = exosystems->toString();
+	string result = "";
+
+	LinkedListIterator<Exosystem> it = LinkedListIterator<Exosystem>(exosystems);
+	while (it.hasNext())
+	{
+		result += it.getNext()->toString();
+		result += "\n\n";
+	}
+
 	if (result.length() > 1) return result;
 	else return "--Empty--\n";
 }
@@ -122,17 +131,22 @@ Exoplanet* Data::linearSearch(Exoplanet& key, Array<Exoplanet*>& planets, char s
 	return nullptr;
 }
 
-/*
-Reads in data from the data file and fills the public array of Exosystems
-*/
 void Data::changeDataFromFile(string inputFileName, char type)
 {
+	cout << "Loading";
+
+	ostringstream rslt;
 	ifstream inputData;
 	inputData.open(inputFileName);
 
 	if (!inputData)
 	{
 		throw exception("File could not be read.");
+	}
+
+	if (type != 'M' && type != 'P' && type != 'A')
+	{
+		throw exception("Invalid type: " + type);
 	}
 
 	string line;
@@ -151,9 +165,10 @@ void Data::changeDataFromFile(string inputFileName, char type)
 	bool hasAllInfo;
 
 	//Step through each line in the data file until there are no more lines
-	int lineNumber = 0;
+	int lineNumber = 1;
 	while (getline(inputData, line))
 	{
+		if (lineNumber % 25 == 0) cout << ".";
 		lineNumber++;
 
 		//Break line up into an array on commas
@@ -194,23 +209,36 @@ void Data::changeDataFromFile(string inputFileName, char type)
 			}
 		}
 
-		//Exosystem info
 		starName = info[0].substr(0, info[0].length() - 2);
-		hasSingleStar = info[9] == "0";
-		numberOfPlanets = stoi(info[1]);
 
-		currentSystem = new Exosystem(starName, numberOfPlanets, hasSingleStar);
-		Exosystem* match = exosystems->search(currentSystem);
-		if (match == nullptr)
+		//Exosystem info
+		if (type == 'P')
 		{
-			if (type == 'A' || type == 'M')
+			currentSystem = new Exosystem(starName, 0, true);
+		}
+		else if (hasAllInfo)
+		{
+			hasSingleStar = info[9] == "0";
+			numberOfPlanets = stoi(info[1]);
+			currentSystem = new Exosystem(starName, numberOfPlanets, hasSingleStar);
+		}
+		else
+		{
+			rslt << "Line " << lineNumber << ": planet did not have all the data and was excluded.\n";
+			continue;
+		}
+
+		Exosystem* match = exosystems->search(*currentSystem);
+		if (match == nullptr)
+		{//No match in system
+			if (type == 'P')
 			{
-				exosystems->add(currentSystem);
+				rslt << "Line " << lineNumber << ": no such system named " + starName + " in data\n";
+				continue;
 			}
 			else
 			{
-				cout << "Line " << lineNumber << ": no such system named " + starName + " in data\n";
-				currentSystem = nullptr;
+				exosystems->add(*currentSystem);
 			}
 		}
 		else
@@ -219,9 +247,8 @@ void Data::changeDataFromFile(string inputFileName, char type)
 		}
 
 		//Exoplanet info
-		if (hasAllInfo && currentSystem != nullptr) //All information for planet is present
+		if (hasAllInfo)
 		{
-			planetName = info[0].at(info[0].length() - 1);
 			msini = stod(info[2]);
 			a = stod(info[3]);
 			per = stod(info[4]);
@@ -229,43 +256,47 @@ void Data::changeDataFromFile(string inputFileName, char type)
 			om = stod(info[6]);
 			t0 = stod(info[7]);
 			k = stod(info[8]);
+		}
 
-			currentPlanet = new Exoplanet(planetName, msini, a, per, ecc, om, t0, k, currentSystem, starName);
-			if (type == 'M' || type == 'A')
+		planetName = info[0].at(info[0].length() - 1);
+
+		currentPlanet = new Exoplanet(planetName, msini, a, per, ecc, om, t0, k, currentSystem, starName);
+
+		if (type == 'P')
+		{
+			try
 			{
-				//add the current planet to the current exosystem
-				try
-				{
-					addPlanetToSystem(currentPlanet, currentSystem, type);
-				}
-				catch (exception e)
-				{
-					//Planet was not added because of validition error
-					planets->remove(currentPlanet);
-					cout << "Line " << lineNumber << ": planet was excluded because " << e.what() << '\n';
-				}
+				removePlanetFromSystem(currentPlanet, currentSystem);
 			}
-			else
+			catch (exception e)
 			{
-				try
-				{
-					removePlanetFromSystem(currentPlanet, currentSystem);
-				}
-				catch (exception e)
-				{
-					cout << "Line " << lineNumber << ": planet " << currentPlanet->getFullName() << e.what() << "\n";
-				}
+				rslt << "Line " << lineNumber << ": planet " << currentPlanet->getFullName() << e.what() << "\n";
 			}
 		}
-		else if (!hasAllInfo)
+		else
 		{
-			cout << "Line " << lineNumber << ": planet did not have all the data and was excluded.\n";
+			//add the current planet to the current exosystem
+			try
+			{
+				addPlanetToSystem(currentPlanet, currentSystem, type);
+			}
+			catch (exception e)
+			{
+				//Planet was not added because of validition error
+				planets->remove(currentPlanet);
+				rslt << "Line " << lineNumber << ": planet was excluded because " << e.what() << '\n';
+			}
 		}
 	}
 
 	inputData.close();
 
 	isEmpty = false;
+
+	cout << "\n";
+
+	//output any information messages
+	cout << rslt.str();
 }
 
 void Data::addPlanetToSystem(Exoplanet* planet, Exosystem* system, char type)
@@ -323,7 +354,7 @@ void Data::removePlanetFromSystem(Exoplanet* planet, Exosystem* system)
 
 		if (system->getCurrentNumberOfPlanets() == 0)
 		{
-			exosystems->remove(system);
+			exosystems->remove(*system);
 		}
 	}
 }

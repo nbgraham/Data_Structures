@@ -1,3 +1,7 @@
+/*
+Uses quicksort adapted from: http://www.algolist.net/Algorithms/Sorting/Quicksort
+*/
+
 #pragma once
 #include <iostream>
 #include <fstream>
@@ -7,11 +11,12 @@ using namespace std;
 #include "Exosystem.h"
 #include "Array.h"
 #include "LinkedList.h"
+#include "LinkedListIterator.h"
 
 class Data
 {
 private:
-	LinkedListPtrs<Exosystem>* exosystems;
+	LinkedList<Exosystem>* exosystems;
 	Array<Exoplanet*>* planets;
 	char isSortedOnKey;
 	bool isEmpty;
@@ -29,16 +34,20 @@ public:
 
 	bool IsEmpty(void) {return isEmpty;};
 	/*
-	Reads in data from the data file and fills both arrays in this object
+	Reads in data from the data file and changes the data based on the type parameter
+	type A: adds all items in data file
+	type M: merge, updates existing items
+	type P: purge, removes all items in the data file from the data
 	*/
 	void changeDataFromFile(string inputFileName, char type);
 	/*
-	Adds the specified Exoplanet point to the specified system in the exosystems array in this object
-	Adds the specified Exoplanet pointer to the list of planets in this object
+	Add or merges (Depending on the type) the specified planet to the specified system and the master array of planets
 	*/
 	void addPlanetToSystem(Exoplanet* planet, Exosystem* system, char type);
+	/*
+	Removes the specified planet form the specified system and the master array of planets
+	*/
 	void removePlanetFromSystem(Exoplanet* planet, Exosystem* system);
-
 	/*
 	Sorts the list of planets based on the selected key
 	*/
