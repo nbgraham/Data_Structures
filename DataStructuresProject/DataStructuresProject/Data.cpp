@@ -200,7 +200,7 @@ void Data::changeDataFromFile(string inputFileName, char type)
 		{
 			hasAllInfo = false;
 		}
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i <= count; i++)
 		{
 			if (info[i].length() < 1)
 			{
