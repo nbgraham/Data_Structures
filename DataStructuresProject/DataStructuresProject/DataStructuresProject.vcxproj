@@ -150,9 +150,13 @@
     <ClInclude Include="Exoplanet.h" />
     <ClInclude Include="Exosystem.h" />
     <ClInclude Include="Array.h" />
+    <ClInclude Include="HashTable.h" />
+    <ClInclude Include="LinkedHashTable.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="LinkedListIterator.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="IntLinkedHashTable.h" />
+    <ClInclude Include="TestLinkedHashMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data.cpp" />

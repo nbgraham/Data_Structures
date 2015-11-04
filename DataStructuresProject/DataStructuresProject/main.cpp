@@ -18,6 +18,9 @@ using namespace std;
 #include "Array.h"
 #include "Data.h"
 #include "LinkedList.h"
+#include "HashTable.h"
+#include "IntLinkedHashTable.h"
+#include "TestLinkedHashMap.h"
 
 void changeDataFromFile(char type, Data& planetData);
 bool dataManipulationLoop(Data& planetData);
@@ -32,6 +35,55 @@ The main function that starts this program
 */
 int main()
 {
+	TestLH test(3);
+
+	test.add(TestObj(5, 5.5, "dags"));
+	test.add(TestObj(54, 0.0546, "qw"));
+	test.add(TestObj(13, 8.11564, "ioui"));
+	test.add(TestObj(62, 7.3, "mhgm"));
+
+	test.remove(TestObj(13, 8.11564, "ioui"));
+
+	test.add(TestObj(153, 782.45, "352t3"));
+
+	TestObj* sr = test.search(TestObj(5, 5.5, "dags"));
+
+	cout << "Search: " << *sr << "\n";
+
+
+	test.debug();
+	test.inorder();
+	cout << "Size: " << test.size() << "\n";
+
+	system("pause");
+
+
+	/*
+	ExoplanetHashTable test(5);
+
+	test.add(string("dgasdga"));
+	test.add(string("wetet"));
+	test.add(string("ooij"));
+	test.add(string("ngwhyu"));
+	test.add(string("opfwhh"));
+	test.add(string("rjw"));
+	test.add(string("okqnf"));
+	test.add(string("agwgw"));
+	test.add(string("wqrv"));
+	test.add(string("lmdag"));
+
+
+	test.debug();
+	
+	test.remove(string("opfwhh"));
+	test.remove(string("rjw"));
+	test.remove(string("okqnf"));
+	test.remove(string("agwgw"));
+
+	test.debug();
+
+	system("pause");
+	
 	//Object that stores all the data for the exosystems
 	Data planetData;
 
@@ -42,7 +94,8 @@ int main()
 	{
 		while (dataManipulationLoop(planetData)) {};
 	}
-	
+	*/
+
 	return 0;
 }
 

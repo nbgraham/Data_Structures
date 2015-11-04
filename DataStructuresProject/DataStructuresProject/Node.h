@@ -7,6 +7,7 @@ public:
 	DataType data;
 	Node<DataType>* next;
 
+	Node();
 	/*
 	Constructor*/
 	Node(DataType& _data);
@@ -17,6 +18,13 @@ public:
 	Empty destructor*/
 	~Node() {};
 };
+
+template<typename DataType>
+inline Node<DataType>::Node()
+{
+	data = DataType();
+	next = nullptr;
+}
 
 template<typename DataType>
 Node<DataType>::Node(DataType& _data)
