@@ -36,16 +36,10 @@
     <ClInclude Include="LinkedListIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HashTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LinkedHashTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntLinkedHashTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TestLinkedHashMap.h">
+    <ClInclude Include="ExoplanetLHT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

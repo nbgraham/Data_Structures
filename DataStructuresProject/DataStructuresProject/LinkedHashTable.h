@@ -54,19 +54,6 @@ inline LinkedHashTable<T,K>::~LinkedHashTable()
 	}
 
 	delete[] arr;
-	/*
-	Node <Node<T>>* curr, temp;
-	for (int i = 0; i < buckets; i++)
-	{
-		curr = arr[i];
-
-		while (curr != nullptr) {
-			temp = curr;
-			curr = curr->next;
-			delete temp;
-		}
-	}
-	*/
 }
 
 template<typename T, typename K>

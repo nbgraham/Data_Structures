@@ -12,14 +12,33 @@ using namespace std;
 #include "Array.h"
 #include "LinkedList.h"
 #include "LinkedListIterator.h"
+#include "ExoplanetLHT.h"
 
 class Data
 {
 private:
+	ExoplanetLHT* hashTable;
 	LinkedList<Exosystem>* exosystems;
 	Array<Exoplanet*>* planets;
 	char isSortedOnKey;
-	bool isEmpty;
+	int numberOfPlanets;
+	/*
+	Adds the planet to the system
+	Overwrites if already exists*/
+	void merge(Exosystem* system, Exoplanet* planet);
+	/*
+	Adapted from:
+	http://www.algolist.net/Algorithms/Sorting/Quicksort
+	*/
+	void quickSort(Array<Exoplanet*>& arr, int left, int right, char sortingKey);
+	/*
+	Implements a binary search
+	*/
+	Exoplanet* binarySearch(Exoplanet& key, Array<Exoplanet*>& planets, char sortingKey) const;
+	/*
+	Implements a linear search
+	*/
+	Exoplanet* linearSearch(Exoplanet& key, Array<Exoplanet*>& planets, char sortingKey) const;
 public:
 	/*
 	Default constructor
@@ -32,7 +51,7 @@ public:
 	*/
 	~Data();
 
-	bool IsEmpty(void) {return isEmpty;};
+	bool IsEmpty(void) {return numberOfPlanets>0;};
 	/*
 	Reads in data from the data file and changes the data based on the type parameter
 	type A: adds all items in data file
@@ -41,40 +60,25 @@ public:
 	*/
 	void changeDataFromFile(string inputFileName, char type);
 	/*
-	Add or merges (Depending on the type) the specified planet to the specified system and the master array of planets
-	*/
-	void addPlanetToSystem(Exoplanet* planet, Exosystem* system, char type);
-	/*
-	Removes the specified planet form the specified system and the master array of planets
-	*/
-	void removePlanetFromSystem(Exoplanet* planet, Exosystem* system);
-	/*
 	Sorts the list of planets based on the selected key
 	*/
 	void sort(char userChoice);
-	/*
-	Adapted from:
-	http://www.algolist.net/Algorithms/Sorting/Quicksort
-	*/
-	void quickSort(Array<Exoplanet*>& arr, int left, int right, char sortingKey);
 	/*
 	Searches through the planets array for a planet that has an equal specified key (sortingKey) as the Exoplanet key
 	Returns a pointer to the system that the found planet is in
 	Returns nullptr if no planet is found
 	*/
 	Exosystem* search(Exoplanet& key, char sortingKey) const;
-	/*
-	Implements a binary search
-	*/
-	Exoplanet* binarySearch(Exoplanet& key, Array<Exoplanet*>& planets, char sortingKey) const;
-	/*
-	Implements a linear search
-	*/
-	Exoplanet* linearSearch(Exoplanet& key, Array<Exoplanet*>& planets, char sortingKey) const;
+
 	/*
 	Returns a string representation of this object
 	*/
 	string toString(void) const;
+
+	void write(ostream& os);
+	void originalOrdering(ostream& os);
+	void list(ostream& os);
+	void debug(ostream& os);
 };
 
 	

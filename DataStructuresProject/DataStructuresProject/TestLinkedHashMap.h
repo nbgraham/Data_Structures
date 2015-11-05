@@ -38,22 +38,31 @@ public:
 	};
 };
 
-class TestLH : public LinkedHashTable<TestObj, int>
+class TestLH : public LinkedHashTable<TestObj, string>
 {
 protected:
-	int hash(int key) override;
-	int getKey(TestObj& data) override;
+	int hash(string key) override;
+	string getKey(TestObj& data) override;
 public:
-	TestLH() : LinkedHashTable<TestObj, int>() {};
-	TestLH(int buckets) : LinkedHashTable<TestObj, int>(buckets) {};
+	TestLH() : LinkedHashTable<TestObj, string>() {};
+	TestLH(int buckets) : LinkedHashTable<TestObj, string>(buckets) {};
 };
 
-int TestLH::getKey(TestObj & data)
+string TestLH::getKey(TestObj & data)
 {
-	return data.n;
+	return data.s;
 }
 
-inline int TestLH::hash(int key)
+inline int TestLH::hash(string key)
 {
-	return key%buckets;
+	unsigned long hash = 5381;
+	int c;
+
+	for (unsigned int i = 0; i < key.length(); ++i)
+	{
+		c = key[i];
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+	}
+
+	return hash%buckets;
 }

@@ -33,7 +33,7 @@ public:
 	int size() { return length; };
 	/*
 	Adds the specified item to the list, in the correct spot to retain sorted order*/
-	void add(T& data);
+	Node<T>* add(T& data);
 	/*
 	Removes the specified item from the list*/
 	void remove(T& data);
@@ -74,17 +74,20 @@ inline LinkedList<T>::LinkedList(LinkedList<T>& list)
 }
 
 template<typename T>
-inline void LinkedList<T>::add(T& data)
+inline Node<T>* LinkedList<T>::add(T& data)
 {
+	Node<T>* result;
 	if (length == 0)
 	{
 		head = new Node<T>(data);
+		result = head;
 	}
 	else
 	{
 		if (data < head->data)
 		{
 			head = new Node<T>(data, head);
+			result = head;
 		}
 		else
 		{
@@ -95,10 +98,12 @@ inline void LinkedList<T>::add(T& data)
 			}
 
 			prev->next = new Node<T>(data, prev->next);
+			result = prev->next;
 		}
 	}
 
 	length++;
+	return result;
 }
 
 template<typename T>

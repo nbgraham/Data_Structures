@@ -35,7 +35,9 @@ public:
 	bool getHasSingleStar(void) const { return hasSingleStar; };
 	int getNumberOfPlanets(void) const { return numberOfPlanets; };
 	int getCurrentNumberOfPlanets(void) const { return planets->size(); };
-	LinkedList<Exoplanet> getPlanets(void) const { return *planets; };
+	LinkedList<Exoplanet>& getPlanets (void) const {
+		return *planets; 
+	};
 
 	//Mutators
 	void setStarName(string _starName) { starName = _starName; };
@@ -66,6 +68,7 @@ public:
 	/*
 	Returns a string representation of the Exosystem, calling the toString method on all its planets*/
 	string toString(void) const;
+	string systemDataString(void) const;
 	/*
 	Overrides the == operator for searching through Array<Exosystem>. Compares solely on starName
 	@param otherExosystem	the system to compare this to*/

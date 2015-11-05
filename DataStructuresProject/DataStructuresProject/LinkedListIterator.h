@@ -11,6 +11,9 @@ private:
 	Node<T>* currNode;
 public:
 	/*
+	Default constructor*/
+	LinkedListIterator();
+	/*
 	Create an iterator over the specified list*/
 	LinkedListIterator(LinkedList<T>* list);
 	/*
@@ -18,8 +21,15 @@ public:
 	bool hasNext() const;
 	/*
 	Returns a pointer to the next item*/
-	const T* getNext();
+	T* getNext();
 };
+
+template<typename T>
+inline LinkedListIterator<T>::LinkedListIterator()
+{
+	_list = nullptr;
+	currNode = nullptr;
+}
 
 template<typename T>
 inline LinkedListIterator<T>::LinkedListIterator(LinkedList<T>* list)
@@ -36,7 +46,7 @@ inline bool LinkedListIterator<T>::hasNext() const
 }
 
 template<typename T>
-inline const T* LinkedListIterator<T>::getNext()
+inline T* LinkedListIterator<T>::getNext()
 {
 	if (currNode == nullptr) throw exception("End of list.");
 	T* temp = &currNode->data;

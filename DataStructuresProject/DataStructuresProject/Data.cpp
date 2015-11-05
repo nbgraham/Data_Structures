@@ -2,9 +2,8 @@
 
 Data::Data()
 {
-	isEmpty = true;
+	numberOfPlanets = 0;
 	isSortedOnKey = 0;
-	planets = new Array<Exoplanet*>();
 	exosystems = new LinkedList <Exosystem>();
 }
 
@@ -129,6 +128,18 @@ Exoplanet* Data::linearSearch(Exoplanet& key, Array<Exoplanet*>& planets, char s
 		}
 	}
 	return nullptr;
+}
+
+void Data::merge(Exosystem * system, Exoplanet * planet)
+{
+	if (system->getPlanets().search(*planet) == nullptr)
+	{
+		system->addPlanet(planet);
+	}
+	else
+	{
+		system->overwritePlanet(planet);
+	}
 }
 
 void Data::changeDataFromFile(string inputFileName, char type)
@@ -264,97 +275,81 @@ void Data::changeDataFromFile(string inputFileName, char type)
 
 		if (type == 'P')
 		{
-			try
-			{
-				removePlanetFromSystem(currentPlanet, currentSystem);
-			}
-			catch (exception e)
-			{
-				rslt << "Line " << lineNumber << ": planet " << currentPlanet->getFullName() << e.what() << "\n";
-			}
+			currentSystem->removePlanet(currentPlanet);
+			numberOfPlanets--;
 		}
 		else
 		{
-			//add the current planet to the current exosystem
-			try
-			{
-				addPlanetToSystem(currentPlanet, currentSystem, type);
-			}
-			catch (exception e)
-			{
-				//Planet was not added because of validition error
-				planets->remove(currentPlanet);
-				rslt << "Line " << lineNumber << ": planet was excluded because " << e.what() << '\n';
-			}
+			merge(currentSystem, currentPlanet);
+			numberOfPlanets++;
 		}
 	}
-
+	
 	inputData.close();
 
-	isEmpty = false;
-
-	cout << "\n";
-
 	//output any information messages
-	cout << rslt.str();
-}
-
-void Data::addPlanetToSystem(Exoplanet* planet, Exosystem* system, char type)
-{
-	Exoplanet* match;
-	if (isSortedOnKey == 'N')
+	cout << "\n" << rslt.str();
+	
+	if (planets != nullptr)
+		delete planets;
+	planets = new Array<Exoplanet*>(numberOfPlanets);
+	if (hashTable != nullptr)
+		delete hashTable;
+	hashTable = new ExoplanetLHT(numberOfPlanets);
+	
+	LinkedListIterator<Exosystem> sysIt(exosystems);
+	LinkedListIterator<Exoplanet> planIt;
+	LinkedList<Exoplanet>* systemPlanets;
+	Exoplanet* curr;
+	while (sysIt.hasNext())
 	{
-		match = binarySearch(*planet, *planets, 'N');
-	}
-	else
-	{
-		match = linearSearch(*planet, *planets, 'N');
-	}
-
-	if (match == nullptr)
-	{
-		//Add planet
-		planets->add(planet);
-		system->addPlanet(planet);
-	}
-	else if (type == 'M')
-	{
-		//Update the planet
-		*match = *planet;
-		system->overwritePlanet(planet);
-		cout << "Planet " + planet->getFullName() + " was overwritten\n";
-	}
-	else
-	{
-		cout << "Planet name " + planet->getFullName() + " is not unique within the system and was excluded.\n";
-	}
-}
-
-void Data::removePlanetFromSystem(Exoplanet* planet, Exosystem* system)
-{
-	Exoplanet* match;
-	if (isSortedOnKey == 'N')
-	{
-		match = binarySearch(*planet, *planets, 'N');
-	}
-	else
-	{
-		match = linearSearch(*planet, *planets, 'N');
-	}
-
-	if (match == nullptr)
-	{
-		throw exception(" was not found in the data.");
-	}
-	else
-	{
-		planets->remove(match);
-
-		system->removePlanet(planet);
-
-		if (system->getCurrentNumberOfPlanets() == 0)
+		systemPlanets = new LinkedList<Exoplanet>(sysIt.getNext()->getPlanets());
+		planIt = LinkedListIterator<Exoplanet>(systemPlanets);
+		while (planIt.hasNext())
 		{
-			exosystems->remove(*system);
+			curr = planIt.getNext();
+			planets->add(curr);
+			hashTable->add(curr);
 		}
 	}
+}
+
+void Data::write(ostream& os)
+{	
+	Exoplanet* curr;
+	for (int i = 0; i < planets->size(); ++i)
+	{
+		curr = planets->at(i);
+		os << curr->getSystemPointer()->systemDataString() << "\n";
+		os << curr->toString() << "\n\n\n";
+	}
+}
+
+void Data::originalOrdering(ostream& os)
+{
+	os << toString();
+}
+
+void Data::list(ostream& os)
+{
+	LinkedListIterator<Exosystem> it = LinkedListIterator<Exosystem>(exosystems);
+	Exoplanet* curr;
+	Exosystem* c;
+	while (it.hasNext())
+	{
+		c = it.getNext();
+		LinkedList<Exoplanet> pl = c->getPlanets();
+		LinkedListIterator<Exoplanet> plIt(&pl);
+		while (plIt.hasNext())
+		{
+			curr = plIt.getNext();
+			os << curr->getSystemPointer()->systemDataString() << "\n";
+			os << curr->toString() << "\n\n\n";
+		}
+	}
+}
+
+void Data::debug(ostream & os)
+{
+	hashTable->debug();
 }

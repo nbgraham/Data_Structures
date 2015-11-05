@@ -100,11 +100,15 @@ double Exosystem::calculateMinPer(void) const
 
 	return minPer;
 }
+string Exosystem::systemDataString(void) const
+{
+	return starName + "," + to_string(numberOfPlanets) + "," + to_string(calculateAverageMsini()) + "," + to_string(calculateMaxPer()) + "," + to_string(calculateMinPer());
+}
 
 string Exosystem::toString(void) const
 {
 	string result;
-	result += starName + "," + to_string(numberOfPlanets) + "," + to_string(calculateAverageMsini()) + "," + to_string(calculateMaxPer()) + "," + to_string(calculateMinPer());
+	result += systemDataString();
 	result += "\n";
 
 	LinkedListIterator<Exoplanet> it = LinkedListIterator<Exoplanet>(planets);

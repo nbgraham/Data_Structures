@@ -18,8 +18,6 @@ using namespace std;
 #include "Array.h"
 #include "Data.h"
 #include "LinkedList.h"
-#include "HashTable.h"
-#include "IntLinkedHashTable.h"
 #include "TestLinkedHashMap.h"
 
 void changeDataFromFile(char type, Data& planetData);
@@ -34,56 +32,7 @@ Exoplanet* createSearchValue(string input, char userChoice);
 The main function that starts this program
 */
 int main()
-{
-	TestLH test(3);
-
-	test.add(TestObj(5, 5.5, "dags"));
-	test.add(TestObj(54, 0.0546, "qw"));
-	test.add(TestObj(13, 8.11564, "ioui"));
-	test.add(TestObj(62, 7.3, "mhgm"));
-
-	test.remove(TestObj(13, 8.11564, "ioui"));
-
-	test.add(TestObj(153, 782.45, "352t3"));
-
-	TestObj* sr = test.search(TestObj(5, 5.5, "dags"));
-
-	cout << "Search: " << *sr << "\n";
-
-
-	test.debug();
-	test.inorder();
-	cout << "Size: " << test.size() << "\n";
-
-	system("pause");
-
-
-	/*
-	ExoplanetHashTable test(5);
-
-	test.add(string("dgasdga"));
-	test.add(string("wetet"));
-	test.add(string("ooij"));
-	test.add(string("ngwhyu"));
-	test.add(string("opfwhh"));
-	test.add(string("rjw"));
-	test.add(string("okqnf"));
-	test.add(string("agwgw"));
-	test.add(string("wqrv"));
-	test.add(string("lmdag"));
-
-
-	test.debug();
-	
-	test.remove(string("opfwhh"));
-	test.remove(string("rjw"));
-	test.remove(string("okqnf"));
-	test.remove(string("agwgw"));
-
-	test.debug();
-
-	system("pause");
-	
+{	
 	//Object that stores all the data for the exosystems
 	Data planetData;
 
@@ -94,8 +43,7 @@ int main()
 	{
 		while (dataManipulationLoop(planetData)) {};
 	}
-	*/
-
+	
 	return 0;
 }
 
@@ -132,15 +80,26 @@ bool dataManipulationLoop(Data& planetData)
 	string input;
 	char userChoice;
 	cout << "--------------------------------------------------------------------------\n";
-	cout << "Choose an option : \n 'W' for write, 'S' for sort, 'F for find, 'M' for merge, 'P' for purge, and 'E' for exit.\n";
+	cout << "Choose an option : \n 'W' for write, 'O' for original order, 'L' for list, 'D' for debug, 'S' for sort, 'F for find, 'M' for merge, 'P' for purge, and 'E' for exit.\n";
 	getline(cin, input);
 	if (input.length() < 1) return true;
 	userChoice = input.at(0);
 
 	if (userChoice == 'W')
 	{
-		//Write
-		cout << planetData.toString();
+		planetData.write(cout);
+	}
+	else if (userChoice == 'O')
+	{
+		planetData.originalOrdering(cout);
+	}
+	else if (userChoice == 'L')
+	{
+		planetData.list(cout);
+	}
+	else if (userChoice == 'D')
+	{
+		planetData.debug(cout);
 	}
 	else if (userChoice == 'S')
 	{
