@@ -2,12 +2,17 @@
 
 Data::Data()
 {
-	numberOfPlanets = 0;
+	numberOfReadPlanets = 0;
 	isSortedOnKey = 0;
 	exosystems = new LinkedList <Exosystem>();
 }
 
 Data::~Data() {
+	if (hashTable != nullptr)
+	{
+		delete hashTable;
+		hashTable = nullptr;
+	}
 	if (planets != nullptr)
 	{
 		delete planets;
@@ -19,21 +24,6 @@ Data::~Data() {
 		delete exosystems;
 		exosystems = nullptr;
 	}
-}
-
-string Data::toString(void) const
-{
-	string result = "";
-
-	LinkedListIterator<Exosystem> it = LinkedListIterator<Exosystem>(exosystems);
-	while (it.hasNext())
-	{
-		result += it.getNext()->toString();
-		result += "\n\n";
-	}
-
-	if (result.length() > 1) return result;
-	else return "--Empty--\n";
 }
 
 void Data::sort(char userChoice)
@@ -76,7 +66,12 @@ void Data::quickSort(Array<Exoplanet*>& arr, int left, int right, char sortingKe
 Exosystem* Data::search(Exoplanet& key, char sortingKey) const
 {
 	Exoplanet* result;
-	if (isSortedOnKey == sortingKey)
+	if (sortingKey == 'N')
+	{
+		result = new Exoplanet(key);
+		result = *hashTable->search(result);
+	}
+	else if (isSortedOnKey == sortingKey)
 	{
 		result = binarySearch(key, *planets, sortingKey);
 	}
@@ -87,8 +82,7 @@ Exosystem* Data::search(Exoplanet& key, char sortingKey) const
 
 	if (result == nullptr) return nullptr;
 
-	Exosystem* resultP = result->getSystemPointer();
-	return resultP;
+	return result->getSystemPointer();
 }
 
 Exoplanet* Data::binarySearch(Exoplanet& key, Array<Exoplanet*>& planets, char sortingKey) const
@@ -275,13 +269,13 @@ void Data::changeDataFromFile(string inputFileName, char type)
 
 		if (type == 'P')
 		{
-			currentSystem->removePlanet(currentPlanet);
-			numberOfPlanets--;
+			numberOfReadPlanets -= currentSystem->getPlanets().size();
+			exosystems->remove(*currentSystem);
 		}
 		else
 		{
 			merge(currentSystem, currentPlanet);
-			numberOfPlanets++;
+			numberOfReadPlanets++;
 		}
 	}
 	
@@ -292,10 +286,10 @@ void Data::changeDataFromFile(string inputFileName, char type)
 	
 	if (planets != nullptr)
 		delete planets;
-	planets = new Array<Exoplanet*>(numberOfPlanets);
+	planets = new Array<Exoplanet*>(numberOfReadPlanets);
 	if (hashTable != nullptr)
 		delete hashTable;
-	hashTable = new ExoplanetLHT(numberOfPlanets);
+	hashTable = new ExoplanetLHT(numberOfReadPlanets);
 	
 	LinkedListIterator<Exosystem> sysIt(exosystems);
 	LinkedListIterator<Exoplanet> planIt;
@@ -316,6 +310,11 @@ void Data::changeDataFromFile(string inputFileName, char type)
 
 void Data::write(ostream& os)
 {	
+	if (numberOfReadPlanets == 0)
+	{
+		os << "--Empty--\n";
+		return;
+	}
 	Exoplanet* curr;
 	for (int i = 0; i < planets->size(); ++i)
 	{
@@ -327,29 +326,37 @@ void Data::write(ostream& os)
 
 void Data::originalOrdering(ostream& os)
 {
-	os << toString();
+	if (numberOfReadPlanets == 0)
+	{
+		os << "--Empty--\n";
+		return;
+	}
+
+	LinkedListIterator<Exosystem> it = LinkedListIterator<Exosystem>(exosystems);
+	while (it.hasNext())
+	{
+		os << it.getNext()->toString() << "\n\n";
+	}
+
 }
 
 void Data::list(ostream& os)
 {
-	LinkedListIterator<Exosystem> it = LinkedListIterator<Exosystem>(exosystems);
-	Exoplanet* curr;
-	Exosystem* c;
-	while (it.hasNext())
+	if (numberOfReadPlanets == 0)
 	{
-		c = it.getNext();
-		LinkedList<Exoplanet> pl = c->getPlanets();
-		LinkedListIterator<Exoplanet> plIt(&pl);
-		while (plIt.hasNext())
-		{
-			curr = plIt.getNext();
-			os << curr->getSystemPointer()->systemDataString() << "\n";
-			os << curr->toString() << "\n\n\n";
-		}
+		os << "--Empty--\n";
+		return;
 	}
+
+	hashTable->inorder(os);
 }
 
 void Data::debug(ostream & os)
 {
-	hashTable->debug();
+	if (numberOfReadPlanets == 0)
+	{
+		os << "--Empty--\n";
+		return;
+	}
+	hashTable->debug(os);
 }

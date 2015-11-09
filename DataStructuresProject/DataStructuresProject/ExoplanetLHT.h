@@ -9,16 +9,16 @@ class ExoplanetLHT : public LinkedHashTable<Exoplanet*, string>
 {
 protected:
 	int hash(string key) override;
-	string getKey(Exoplanet*& data) override;
+	string getKey(Exoplanet*& data) override {
+		return data->getFullName();
+	};
+	bool equal(Exoplanet*& data, Exoplanet*& other) override;
+	string getStringValue(Exoplanet*& data) override;
+	string getFullStringValue(Exoplanet*& data) override;
 public:
 	ExoplanetLHT() : LinkedHashTable<Exoplanet*, string>() {};
 	ExoplanetLHT(int buckets) : LinkedHashTable<Exoplanet*, string>(buckets) {};
 };
-
-string ExoplanetLHT::getKey(Exoplanet*& data)
-{
-	return data->getFullName();
-}
 
 inline int ExoplanetLHT::hash(string key)
 {
@@ -31,5 +31,21 @@ inline int ExoplanetLHT::hash(string key)
 		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 	}
 
-	return hash%buckets;
+	return hash % buckets;
 }
+
+inline bool ExoplanetLHT::equal(Exoplanet *& data, Exoplanet *& other)
+{
+	return data->getFullName() == other->getFullName();
+}
+
+inline string ExoplanetLHT::getStringValue(Exoplanet *& data)
+{
+	return data->toString();
+}
+
+inline string ExoplanetLHT::getFullStringValue(Exoplanet *& data)
+{
+	return data->getSystemPointer()->systemDataString() + "\n" + data->toString();
+}
+

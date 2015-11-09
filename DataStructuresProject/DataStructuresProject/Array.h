@@ -1,3 +1,7 @@
+/*
+Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
+*/
+
 #pragma once
 #include <exception>
 #include <sstream>
@@ -104,7 +108,7 @@ void Array<dataType>::resize()
 	arr = new dataType[capacity * 2];
 	if (arr == nullptr)
 	{
-		throw exception("Not enough memory.");
+		throw ArrayMemoryException();
 	}
 
 	for (int i = 0; i < sze; i++)
@@ -120,7 +124,7 @@ void Array<dataType>::remove(dataType element)
 {
 	int i = indexOf(element);
 
-	if (i == -1) throw exception("Specified element not in the array");
+	if (i == -1) throw ArrayElementNotFoundException();
 
 	while (i < sze - 1)
 	{
@@ -133,7 +137,7 @@ void Array<dataType>::remove(dataType element)
 template <typename dataType>
 void Array<dataType>::removeAt(int index)
 {
-	if (index < 0 || index >= sze) throw exception("Index out of range.");
+	if (index < 0 || index >= sze) throw ArrayIndexOutOfBoundsException;
 
 	while (index < sze - 1)
 	{
@@ -146,7 +150,7 @@ void Array<dataType>::removeAt(int index)
 template<typename dataType>
 dataType Array<dataType>::at(int index) const
 {
-	if (index < 0 || index >= sze) throw exception("Index out of range.");
+	if (index < 0 || index >= sze) throw ArrayIndexOutOfBoundsException();
 	return arr[index];
 }
 
@@ -197,3 +201,34 @@ void Array<dataType>::swap(int index0, int index1)
 	arr[index1] = temp;
 }
 
+/*
+Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
+*/
+class ArrayException : public exception
+{
+	virtual const char* what() const throw() = 0;
+};
+
+class ArrayIndexOutOfBoundsException : public ArrayException
+{
+	virtual const char* what() const throw()
+	{
+		return "The index is out of bounds";
+	}
+};
+
+class ArrayMemoryException : public ArrayException
+{
+	virtual const char* what() const throw()
+	{
+		return "Not enough memory for array allocation";
+	}
+};
+
+class ArrayElementNotFoundException : public ArrayException
+{
+	virtual const char* what() const throw()
+	{
+		return "Element not found in array";
+	}
+};

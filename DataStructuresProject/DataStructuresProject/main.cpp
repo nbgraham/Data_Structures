@@ -18,7 +18,6 @@ using namespace std;
 #include "Array.h"
 #include "Data.h"
 #include "LinkedList.h"
-#include "TestLinkedHashMap.h"
 
 void changeDataFromFile(char type, Data& planetData);
 bool dataManipulationLoop(Data& planetData);
@@ -50,10 +49,12 @@ int main()
 void changeDataFromFile(char type, Data& planetData)
 {
 	string fileName;
-	bool redo = false;
+	bool redo;
 
 	do
 	{
+		redo = false;
+
 		cout << "Enter a file name (blank to continue): ";
 		getline(cin, fileName);
 

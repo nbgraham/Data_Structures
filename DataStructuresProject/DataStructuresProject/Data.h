@@ -21,7 +21,7 @@ private:
 	LinkedList<Exosystem>* exosystems;
 	Array<Exoplanet*>* planets;
 	char isSortedOnKey;
-	int numberOfPlanets;
+	int numberOfReadPlanets;
 	/*
 	Adds the planet to the system
 	Overwrites if already exists*/
@@ -51,7 +51,7 @@ public:
 	*/
 	~Data();
 
-	bool IsEmpty(void) {return numberOfPlanets>0;};
+	bool IsEmpty(void) {return numberOfReadPlanets == 0;};
 	/*
 	Reads in data from the data file and changes the data based on the type parameter
 	type A: adds all items in data file

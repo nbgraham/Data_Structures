@@ -1,3 +1,7 @@
+/*
+Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
+*/
+
 #pragma once
 
 #include <string>
@@ -124,7 +128,7 @@ inline void LinkedList<T>::remove(T& data)
 {
 	if (length == 0)
 	{
-		throw exception("Item to be removed was not in linked list");
+		throw LinkedListElementNotFoundException();
 	}
 	else
 	{
@@ -146,7 +150,7 @@ inline void LinkedList<T>::remove(T& data)
 
 			if (prev->next == nullptr)
 			{
-				throw exception("Item to be removed was not in linked list");
+				throw LinkedListElementNotFoundException();
 			}
 			else
 			{
@@ -188,5 +192,22 @@ inline T* LinkedList<T>::search(T& data) const
 	{
 		return nullptr;
 	}
+
 	return &temp->data;
 }
+
+/*
+Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
+*/
+class LinkedListException : public exception
+{
+	virtual const char* what() const throw() = 0;
+};
+
+class LinkedListElementNotFoundException : public LinkedListException
+{
+	virtual const char* what() const throw()
+	{
+		return "Element was not in the list";
+	};
+};
