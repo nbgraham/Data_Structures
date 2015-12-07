@@ -1,7 +1,3 @@
-/*
-Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
-*/
-
 #pragma once
 
 #include <string>
@@ -196,18 +192,5 @@ inline T* LinkedList<T>::search(T& data) const
 	return &temp->data;
 }
 
-/*
-Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
-*/
-class LinkedListException : public exception
-{
-	virtual const char* what() const throw() = 0;
-};
-
-class LinkedListElementNotFoundException : public LinkedListException
-{
-	virtual const char* what() const throw()
-	{
-		return "Element was not in the list";
-	};
-};
+class LinkedListException : public exception {};
+class LinkedListElementNotFoundException : public LinkedListException {};

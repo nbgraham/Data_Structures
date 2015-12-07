@@ -1,7 +1,3 @@
-/*
-Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
-*/
-
 #pragma once
 
 #include "Node.h"
@@ -187,6 +183,8 @@ inline void LinkedHashTable<T,K>::debug(ostream& os)
 	int numberWithNull = 0;
 	int totalNumberProbes = 0;
 	int usedBuckets = 0;
+	int depth = 0;
+	int numberOfKeys = 0;
 
 	for (int i = 0; i < buckets; i++)
 	{
@@ -198,11 +196,14 @@ inline void LinkedHashTable<T,K>::debug(ostream& os)
 		else
 		{
 			usedBuckets++;
+			depth = 0;
 			Node<Node<T>>* temp = arr[i];
 
 			while (temp != nullptr)
 			{
-				totalNumberProbes++;
+				numberOfKeys++;
+				depth++;
+				totalNumberProbes += depth;
 				os << getStringValue(temp->data.data) << ", \n   ";
 				temp = temp->next;
 			}
@@ -210,7 +211,7 @@ inline void LinkedHashTable<T,K>::debug(ostream& os)
 
 		os << "\n";
 	}
-	os << "Number of empty buckets: " << numberWithNull << " Avg Num Probes for this set of keys: " << (double)totalNumberProbes / usedBuckets << "\n";
+	os << "Number of empty buckets: " << numberWithNull << " Avg Num Probes for this set of keys: " << (double)totalNumberProbes / numberOfKeys << "\n";
 }
 
 template<typename T, typename K>
@@ -243,18 +244,5 @@ inline T * LinkedHashTable<T, K>::search(T& data)
 	}
 }
 
-/*
-Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
-*/
-class LinkedHashTableException : public exception
-{
-	virtual const char* what() const throw() = 0;
-};
-
-class LinkedHashTableElementNotFoundException : public LinkedHashTableException
-{
-	virtual const char* what() const throw()
-	{
-		return "Element not found in linked hash table";
-	};
-};
+class LinkedHashTableException : public exception {};
+class LinkedHashTableElementNotFoundException : public LinkedHashTableException {};

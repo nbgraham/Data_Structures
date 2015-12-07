@@ -1,7 +1,3 @@
-/*
-Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
-*/
-
 #pragma once
 #include <exception>
 #include <sstream>
@@ -201,34 +197,7 @@ void Array<dataType>::swap(int index0, int index1)
 	arr[index1] = temp;
 }
 
-/*
-Code for exception classes adapted from http://www.cplusplus.com/doc/tutorial/exceptions/
-*/
-class ArrayException : public exception
-{
-	virtual const char* what() const throw() = 0;
-};
-
-class ArrayIndexOutOfBoundsException : public ArrayException
-{
-	virtual const char* what() const throw()
-	{
-		return "The index is out of bounds";
-	}
-};
-
-class ArrayMemoryException : public ArrayException
-{
-	virtual const char* what() const throw()
-	{
-		return "Not enough memory for array allocation";
-	}
-};
-
-class ArrayElementNotFoundException : public ArrayException
-{
-	virtual const char* what() const throw()
-	{
-		return "Element not found in array";
-	}
-};
+class ArrayException : public exception {};
+class ArrayIndexOutOfBoundsException : public ArrayException {};
+class ArrayMemoryException : public ArrayException {};
+class ArrayElementNotFoundException : public ArrayException {};
