@@ -147,9 +147,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AVLTree.h" />
-    <ClInclude Include="AVLTreeExosystem.h" />
+    <ClInclude Include="AVLTreeIterator.h" />
     <ClInclude Include="BinarySearchTree.h" />
     <ClInclude Include="Data.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Exoplanet.h" />
     <ClInclude Include="ExoplanetLHT.h" />
     <ClInclude Include="Exosystem.h" />

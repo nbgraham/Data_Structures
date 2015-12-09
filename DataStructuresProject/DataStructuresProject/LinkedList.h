@@ -76,6 +76,8 @@ inline LinkedList<T>::LinkedList(LinkedList<T>& list)
 template<typename T>
 inline Node<T>* LinkedList<T>::add(T& data)
 {
+	T* d = new T(data);
+	data = *d;
 	Node<T>* result;
 	if (length == 0)
 	{

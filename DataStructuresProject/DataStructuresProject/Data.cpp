@@ -4,7 +4,8 @@ Data::Data()
 {
 	numberOfReadPlanets = 0;
 	isSortedOnKey = 0;
-	exosystems = new LinkedList <Exosystem>();
+	exosystems = new AVLTree<ExosystemP>();
+	dbg "Constructed data object\n";
 }
 
 Data::~Data() {
@@ -24,6 +25,7 @@ Data::~Data() {
 		delete exosystems;
 		exosystems = nullptr;
 	}
+	dbg "Destructed data object\n";
 }
 
 void Data::sort(char userChoice)
@@ -69,7 +71,9 @@ Exosystem* Data::search(Exoplanet& key, char sortingKey) const
 	if (sortingKey == 'N')
 	{
 		result = new Exoplanet(key);
-		result = *hashTable->search(result);
+		Exoplanet** temp = hashTable->search(result);
+		if (temp == nullptr) result = nullptr;
+		else result = *temp;
 	}
 	else if (isSortedOnKey == sortingKey)
 	{
@@ -159,7 +163,7 @@ void Data::changeDataFromFile(string inputFileName, char type)
 	getline(inputData, line);
 
 	//Declare necessary data
-	Exosystem* currentSystem = nullptr;
+	Exosystem* currentSystem;
 	Exoplanet* currentPlanet = nullptr;
 	string starName;
 	char planetName;
@@ -233,7 +237,7 @@ void Data::changeDataFromFile(string inputFileName, char type)
 			continue;
 		}
 
-		Exosystem* match = exosystems->search(*currentSystem);
+		ExosystemP* match = exosystems->search(ExosystemP(currentSystem));
 		if (match == nullptr)
 		{//No match in system
 			if (type == 'P')
@@ -243,12 +247,12 @@ void Data::changeDataFromFile(string inputFileName, char type)
 			}
 			else
 			{
-				exosystems->add(*currentSystem);
+				currentSystem = (*exosystems->add(ExosystemP(currentSystem))).ptr;
 			}
 		}
 		else
 		{
-			currentSystem = match;
+			currentSystem = (*match).ptr;
 		}
 
 		//Exoplanet info
@@ -270,10 +274,11 @@ void Data::changeDataFromFile(string inputFileName, char type)
 		if (type == 'P')
 		{
 			numberOfReadPlanets -= currentSystem->getPlanets().size();
-			exosystems->remove(*currentSystem);
+			exosystems->remove(ExosystemP(currentSystem));
 		}
 		else
 		{
+			dbg "Adding planet "; dbg currentPlanet->getName(); dbg " to system "; dbg currentSystem->getStarName(); dbg "\n";
 			merge(currentSystem, currentPlanet);
 			numberOfReadPlanets++;
 		}
@@ -289,22 +294,26 @@ void Data::changeDataFromFile(string inputFileName, char type)
 	planets = new Array<Exoplanet*>(numberOfReadPlanets);
 	if (hashTable != nullptr)
 		delete hashTable;
+	dbg "Creating new hash table of size "; dbg numberOfReadPlanets; dbg "\n";
 	hashTable = new ExoplanetLHT(numberOfReadPlanets);
 	
-	LinkedListIterator<Exosystem> sysIt(exosystems);
+	AVLTreeIterator<ExosystemP> sysIt(exosystems);
 	LinkedListIterator<Exoplanet> planIt;
 	LinkedList<Exoplanet>* systemPlanets;
 	Exoplanet* curr;
 	while (sysIt.hasNext())
 	{
-		systemPlanets = new LinkedList<Exoplanet>(sysIt.getNext()->getPlanets());
+		dbg "Adding planets to hash table and array: ";
+		systemPlanets = new LinkedList<Exoplanet>(sysIt.getNext().ptr->getPlanets());
 		planIt = LinkedListIterator<Exoplanet>(systemPlanets);
 		while (planIt.hasNext())
 		{
 			curr = planIt.getNext();
+			dbg curr->getFullName(); dbg ", ";
 			planets->add(curr);
 			hashTable->add(curr);
 		}
+		dbg "\n";
 	}
 }
 
@@ -332,10 +341,10 @@ void Data::originalOrdering(ostream& os)
 		return;
 	}
 
-	LinkedListIterator<Exosystem> it = LinkedListIterator<Exosystem>(exosystems);
+	AVLTreeIterator<ExosystemP> it = AVLTreeIterator<ExosystemP>(exosystems);
 	while (it.hasNext())
 	{
-		os << it.getNext()->toString() << "\n\n";
+		os << it.getNext().ptr->toString() << "\n\n";
 	}
 
 }

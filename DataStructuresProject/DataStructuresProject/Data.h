@@ -13,12 +13,16 @@ using namespace std;
 #include "LinkedList.h"
 #include "LinkedListIterator.h"
 #include "ExoplanetLHT.h"
+#include "AVLTreeExosystem.h"
+#include "AVLTreeIterator.h"
+#include "ExosystemP.h"
+#include "Debug.h"
 
 class Data
 {
 private:
 	ExoplanetLHT* hashTable;
-	LinkedList<Exosystem>* exosystems;
+	AVLTree<ExosystemP>* exosystems;
 	Array<Exoplanet*>* planets;
 	char isSortedOnKey;
 	int numberOfReadPlanets;

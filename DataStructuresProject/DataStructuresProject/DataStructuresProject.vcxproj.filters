@@ -48,7 +48,10 @@
     <ClInclude Include="AVLTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AVLTreeExosystem.h">
+    <ClInclude Include="AVLTreeIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

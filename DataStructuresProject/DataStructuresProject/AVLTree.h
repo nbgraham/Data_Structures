@@ -1,91 +1,80 @@
+#pragma once
+using namespace std;
+#include <string>
+#include <exception>
+#include "Array.h"
+#include "Debug.h"
+
 /*
 Inspired from https://cskill.wordpress.com/2012/09/02/avl-tree-with-parent-node/
 */
-
-#pragma once
-#include <string>
-#include <exception>
-
-#ifdef DEBUG
-#define dbg  printf
-#else
-#define dbg   if(0)
-#endif
 
 class AVLTreeException : public exception {};
 class AVLItemNotFound : AVLTreeException {};
 class AVLWrongParent : AVLTreeException {};
 class AVLEmptyTree : AVLTreeException {};
 
+/*
+A structure for each node in an AVL Tree of type T*/
+template <typename T>
+struct node {
+	T* data;
+	/*
+	height on right minus height on left*/
+	int diff;
+	node<T>* left;
+	node<T>* right;
+	node<T>* parent;
+};
+
 template <typename T>
 class AVLTree
 {
-protected:
-	/*
-	A structure for each node in an AVL Tree of type T*/
-	struct node {
-		T* data;
-		/*
-		height on right minus height on left*/
-		int diff;
-		node* left;
-		node* right;
-		node* parent;
-	};
-
+private:
 	/*
 	The root of this tree*/
-	node* root;
+	node<T>* root;
 	/*
 	Number of entries in this tree*/
 	int size;
 
 	/*
-	Returns the root of this tree*/
-	node* getRoot() { return root; };
-	/*
 	Returns true if the the pointer is null or the node has no data*/
-	bool isEmpty(node* n);
+	bool isEmpty(node<T>* n);
 
-	/*
-	Compares two values of type T
-	Returns -1 if item < other
-	Returns 0 if item == other
-	Returns 1 if item > other*/
-	virtual int compare(T& item, T& other);
 	/*
 	Returns the max of two numbers*/
 	int max(int a, int b);
 
 	/*
 	Updates all diffs below the specified node*/
-	void updateTreeDiffs(node* n);
+	void updateTreeDiffs(node<T>* n);
 	/*
 	Updates the diff at the specified node*/
-	int updateNodeDiff(node* n);
+	int updateNodeDiff(node<T>* n);
 	/*
 	Gets the height of the tree starting at the specified node*/
-	int getHeight(node* n);
+	int getHeight(node<T>* n);
 	/*
 	Fixes any imbalance, based on the situation represented by the ancestor and added nodes
-	Adapted from https://cskill.wordpress.com/2012/09/02/avl-tree-with-parent-node/*/
-	void fixImbalance(node* ancestor, node* added);
+	Adapted from https://cskill.wordpress.com/2012/09/02/avl-tree-with-parent-node<T>/*/
+	void fixImbalance(node<T>* ancestor, node<T>* added);
 
 	/*
 	Creates a child node of _parent with _data as the data and places it in child (output)*/
-	void makeChildNode(node** child, node* _parent, T* _data);
+	void makeChildNode(node<T>** child, node<T>* _parent, T* _data);
 	
 
 	/*
 	Finds the node that contains itema and places it in result (output)*/
-	void find(T& item, node** result);
+	void find(T& item, node<T>** result);
 	/*
 	Finds the node with the greatest value less than n and places it in result (output)*/
-	void findGreatestLesserValue(node* n, node** result);
+	void findGreatestLesserValue(node<T>* n, node<T>** result);
 	
 	/*
 	Recurisve call inorder on the specified node, buidling up current*/
-	string inorder(string current, node* n);
+	string inorder(string current, node<T>* n);
 
 	/*
 	Swaps the values in the two memory locations*/
@@ -93,17 +82,17 @@ protected:
 	/*
 	Clockwise rotation about n
 	left left case*/
-	void zig(node* n);
+	void zig(node<T>* n);
 	/*
 	Counter-clockwise rotation about n
 	right right case*/
-	void zag(node* n);
+	void zag(node<T>* n);
 	/*
 	left right case*/
-	void zigzag(node* n);
+	void zigzag(node<T>* n);
 	/*
 	right left case*/
-	void zagzig(node * n);
+	void zagzig(node<T> * n);
 public:
 	/*
 	Default constructor*/
@@ -121,17 +110,24 @@ public:
 	/*
 	Returns the size of this tree*/
 	int getSize() { return size; }
+	/*
+	Returns the root of this tree*/
+	node<T>* getRoot() { return root; };
 
 	/*
 	Returns a pointer to the data item that is equal to the specified item according to the compare method*/
 	T* search(T& item);
+	T* searchItemAtMemoryLocation(T*item);
+
 	/*
 	Adds the specified item to the tree
 	Adapted from https://cskill.wordpress.com/2012/09/02/avl-tree-with-parent-node/*/
-	void add(T& item);
+	T* add(T& item);
+	T* addItemAtMemoryLocation(T* item);
 	/*
 	Removes the specified item from the tree*/
 	void remove(T& item);
+	void removeItemAtMemoryLocation(T* item);
 
 	/*
 	Returns a string representation of this tree inorder*/
@@ -139,15 +135,7 @@ public:
 };
 
 template<typename T>
-inline int AVLTree<T>::compare(T & item, T & other)
-{
-	if (item < other) return -1;
-	else if (item > other) return 1;
-	else return 0;
-}
-
-template<typename T>
-inline void AVLTree<T>::updateTreeDiffs(node* n)
+inline void AVLTree<T>::updateTreeDiffs(node<T>* n)
 {
 	if (isEmpty(n)) return;
 
@@ -157,7 +145,7 @@ inline void AVLTree<T>::updateTreeDiffs(node* n)
 }
 
 template<typename T>
-inline int AVLTree<T>::updateNodeDiff(node * n)
+inline int AVLTree<T>::updateNodeDiff(node<T> * n)
 {
 	if (isEmpty(n)) return 0;
 
@@ -166,7 +154,7 @@ inline int AVLTree<T>::updateNodeDiff(node * n)
 }
 
 template<typename T>
-inline int AVLTree<T>::getHeight(node * n)
+inline int AVLTree<T>::getHeight(node<T> * n)
 {
 	if (isEmpty(n)) return 0;
 
@@ -174,30 +162,29 @@ inline int AVLTree<T>::getHeight(node * n)
 }
 
 template<typename T>
-inline void AVLTree<T>::fixImbalance(node * ancestor, node * added)
+inline void AVLTree<T>::fixImbalance(node<T> * ancestor, node<T> * added)
 {
-	dbg("ancestor data:%d added data:%d\n", *ancestor->data, *added->data);
-	if (compare(*ancestor->data, *added->data) < 0) {
+	if (*ancestor->data < *added->data) {
 		//Added node is on right of ancestor
-		node * r = ancestor->right;
-		if (compare(*r->data, *added->data) < 0) {
-			dbg("right right heavy\n");
+		node<T> * r = ancestor->right;
+		if (*r->data < *added->data) {
+			dbg "right right heavy\n";
 			zag(ancestor);
 		}
-		else if (compare(*r->data, *added->data) > 0) {
-			dbg("right left heavy\n");
+		else if (*r->data > *added->data) {
+			dbg "right left heavy\n";
 			zagzig(ancestor);
 		}
 	}
-	else if (compare(*ancestor->data, *added->data) > 0) {
+	else if (*ancestor->data > *added->data) {
 		//Added node is on left of ancestor
-		node * l = ancestor->left;
-		if (compare(*l->data, *added->data) < 0) {
-			dbg("left right heavy\n");
+		node<T> * l = ancestor->left;
+		if (*l->data < *added->data) {
+			dbg "left right heavy\n";
 			zigzag(ancestor);
 		}
-		else if (compare(*l->data, *added->data) > 0) {
-			dbg("left left heavy\n");
+		else if (*l->data > *added->data) {
+			dbg "left left heavy\n";
 			zig(ancestor);
 		}
 	}
@@ -214,9 +201,9 @@ inline int AVLTree<T>::max(int a, int b)
 }
 
 template<typename T>
-inline void AVLTree<T>::makeChildNode(node** child, node* _parent, T* _data)
+inline void AVLTree<T>::makeChildNode(node<T>** child, node<T>* _parent, T* _data)
 {
-	node* result = new node;
+	node<T>* result = new node<T>;
 	result->parent = _parent;
 	result->data = _data;
 	result->diff = 0;
@@ -226,7 +213,7 @@ inline void AVLTree<T>::makeChildNode(node** child, node* _parent, T* _data)
 }
 
 template<typename T>
-inline bool AVLTree<T>::isEmpty(node * n)
+inline bool AVLTree<T>::isEmpty(node<T> * n)
 {
 	if (n == nullptr) return true;
 	if (n->data == nullptr) return true;
@@ -235,7 +222,7 @@ inline bool AVLTree<T>::isEmpty(node * n)
 
 
 template<typename T>
-inline string AVLTree<T>::inorder(string current, node* n)
+inline string AVLTree<T>::inorder(string current, node<T>* n)
 {
 	if (!isEmpty(n))
 	{
@@ -263,20 +250,20 @@ inline void AVLTree<T>::swap(T * ptrData, T * other)
 /*
 Adapted from notes */
 template<typename T>
-inline void AVLTree<T>::zig(node* n)
+inline void AVLTree<T>::zig(node<T>* n)
 {
 	if (isEmpty(n))
 	{
-		dbg("Called zig on empty tree\n");
+		dbg "Called zig on empty tree\n";
 		return;
 	}
 	if (isEmpty(n->left))
 	{
-		dbg("Called zig on %d, but left was empty\n", *n->data);
+		dbg "Called zig on "; dbg *n->data; dbg "but left was empty\n";
 		return;
 	}
 
-	node* leftChild = (node*) n->left;
+	node<T>* leftChild = (node<T>*) n->left;
 
 	n->left = leftChild->left;
 	if (leftChild->left != nullptr) leftChild->left->parent = n;
@@ -295,20 +282,20 @@ inline void AVLTree<T>::zig(node* n)
 /*
 Adapted from notes*/
 template<typename T>
-inline void AVLTree<T>::zag(node* n)
+inline void AVLTree<T>::zag(node<T>* n)
 {
 	if (isEmpty(n))
 	{
-		dbg("Called zag on empty tree\n");
+		dbg "Called zag on empty tree\n";
 		return;
 	}
 	if (isEmpty(n->right))
 	{
-		dbg("Called zag on %d, but right is empty\n",*n->data);
+		dbg "Called zag on "; dbg *n->data; ", but right is empty\n";
 		return;
 	} 
 	
-	node* rightChild = new node(*n->right);
+	node<T>* rightChild = new node<T>(*n->right);
 
 	n->right = rightChild->right;
 	if (rightChild->right != nullptr) rightChild->right->parent = n;
@@ -326,11 +313,11 @@ inline void AVLTree<T>::zag(node* n)
 /*
 Adapted from lectures slides*/
 template<typename T>
-inline void AVLTree<T>::zigzag(node* n)
+inline void AVLTree<T>::zigzag(node<T>* n)
 {
 	if (isEmpty(n))
 	{
-		dbg("Called zigzag on empty node\n");
+		dbg "Called zigzag on empty node\n";
 		return;
 	}
 	zag(n->left);
@@ -340,11 +327,11 @@ inline void AVLTree<T>::zigzag(node* n)
 /*
 Adapted from lecture slides*/
 template<typename T>
-inline void AVLTree<T>::zagzig(node* n)
+inline void AVLTree<T>::zagzig(node<T>* n)
 {
 	if (isEmpty(n))
 	{
-		dbg("Called zagzig on empty node");
+		dbg "Called zagzig on empty node";
 		return;
 	}
 	zig(n->right);
@@ -376,65 +363,83 @@ inline AVLTree<T>::~AVLTree()
 }
 
 template<typename T>
-inline T * AVLTree<T>::search(T & item)
+inline T* AVLTree<T>::search(T & item)
 {
-	node* result;
-	find(item, &result);
+	node<T>* result;
+	try
+	{
+		find(item, &result);
+	}
+	catch (AVLItemNotFound e)
+	{
+		return nullptr;
+	}
 	return result->data;
 }
 
 template<typename T>
-inline void AVLTree<T>::add(T & item)
+inline T* AVLTree<T>::searchItemAtMemoryLocation(T * item)
 {
+	return search(*item);
+}
+
+template<typename T>
+inline T* AVLTree<T>::add(T & item)
+{
+	T* result = nullptr;
 	if (root == nullptr)
 	{
-		dbg("Adding %d at root of tree\n", item);
+		dbg "Adding "; dbg item; dbg " at root of tree\n";
 		makeChildNode(&root, nullptr, new T(item));
+		result = root->data;
 	}
 	else
 	{
-		node* n = root;
+		node<T>* n = root;
 		while (n != nullptr)
 		{
-			if (compare(item, *n->data) < 0)
+			if (item < *n->data)
 			{
 				if (n->left == nullptr)
 				{
-					dbg("Adding %d to left of %d\n", item, *n->data);
+					dbg "Adding "; dbg item; dbg " to left of "; dbg *n->data; dbg "\n";
 					makeChildNode(&n->left, n, new T(item));
 					n = n->left;
+					result = n->data;
 					break;
 				}
 				n = n->left;
 			}
-			else if (compare (item, *n->data) > 0)
+			else if (item > *n->data)
 			{
 				if (n->right == nullptr)
 				{
-					dbg("Adding %d to right of %d\n", item, *n->data);
+					dbg "Adding "; dbg item; dbg " to right of "; dbg *n->data; dbg "\n";
 					makeChildNode(&n->right, n, new T(item));
 					n = n->right;
+					result = n->data;
 					break;
 				}
 				n = n->right;
 			}
 			else
 			{
-				dbg("Node %d exists\n", *n->data);
+				dbg "Node "; dbg *n->data; dbg "exists\n";
+				result = n->data;
 				break;
 			}
 		}
 
 		updateTreeDiffs(root);
 
-		node* ancestor = n->parent;
+		node<T>* ancestor = n->parent;
 
 		while (ancestor != nullptr)
 		{
 			int diff = updateNodeDiff(ancestor);
 			if (diff <= -2 || diff >= 2)
 			{
-				dbg("Imbalance %d at ancestor %d because of added item %d\n", diff, *ancestor->data, *n->data);
+				dbg "Imbalance "; dbg diff; dbg " at ancestor "; dbg *ancestor->data; dbg " because of added item "; dbg  *n->data; dbg "\n";
 				fixImbalance(ancestor, n);
 			}
 			ancestor = ancestor->parent;
@@ -443,15 +448,23 @@ inline void AVLTree<T>::add(T & item)
 		updateTreeDiffs(root);
 	}
 	size++;
+
+	return result;
+}
+
+template<typename T>
+inline T* AVLTree<T>::addItemAtMemoryLocation(T * item)
+{
+	return add(*item);
 }
 
 template<typename T>
 inline void AVLTree<T>::remove(T & item)
 {
-	node* itemNode;
+	node<T>* itemNode;
 	find(item, &itemNode);
 
-	node* p = itemNode->parent;
+	node<T>* p = itemNode->parent;
 
 	if (itemNode->left == nullptr && itemNode->right == nullptr)
 	{
@@ -476,7 +489,7 @@ inline void AVLTree<T>::remove(T & item)
 	}
 	else
 	{
-		node* greatestLesserValue;
+		node<T>* greatestLesserValue;
 		findGreatestLesserValue(itemNode, &greatestLesserValue);
 		itemNode->data = greatestLesserValue->data;
 
@@ -497,7 +510,13 @@ inline void AVLTree<T>::remove(T & item)
 }
 
 template<typename T>
-inline void AVLTree<T>::find(T & item, node** result)
+inline void AVLTree<T>::removeItemAtMemoryLocation(T * item)
+{
+	remove(*item);
+}
+
+template<typename T>
+inline void AVLTree<T>::find(T & item, node<T>** result)
 {
 	if (root == nullptr)
 	{
@@ -505,14 +524,14 @@ inline void AVLTree<T>::find(T & item, node** result)
 	}
 	else
 	{
-		node* n = root;
+		node<T>* n = root;
 		while (n != nullptr)
 		{
-			if (compare(item, *n->data) < 0)
+			if (item < *n->data)
 			{
 				n = n->left;
 			}
-			else if (compare(item, *n->data) > 0)
+			else if (item > *n->data)
 			{
 				n = n->right;
 			}
@@ -522,13 +541,14 @@ inline void AVLTree<T>::find(T & item, node** result)
 				return;
 			}
 		}
+		throw AVLItemNotFound();
 	}
 }
 
 template<typename T>
-inline void AVLTree<T>::findGreatestLesserValue(node * n, node ** result)
+inline void AVLTree<T>::findGreatestLesserValue(node<T> * n, node<T> ** result)
 {
-	node* c = n->left;
+	node<T>* c = n->left;
 	while (c->right != nullptr)
 	{
 		c = c->right;

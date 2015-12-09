@@ -18,7 +18,6 @@ using namespace std;
 #include "Array.h"
 #include "Data.h"
 #include "LinkedList.h"
-#include "AVLTree.h"
 
 void changeDataFromFile(char type, Data& planetData);
 bool dataManipulationLoop(Data& planetData);
@@ -33,30 +32,6 @@ The main function that starts this program
 */
 int main()
 {
-	int sev = 7;
-	int five = 5;
-	int four = 4;
-	int th = 3;
-	int one = 1;
-	int two = 2;
-	int eight = 8;
-
-	AVLTree<int> test;
-	test.add(th);
-	test.add(four);
-	test.add(five);
-	test.add(sev);
-	test.add(eight);
-	test.add(one);
-	test.add(two);
-
-	test.remove(four);
-	test.remove(eight);
-
-	cout << test.inorder() << "\n";
-	system("pause");
-
-	/*
 	//Object that stores all the data for the exosystems
 	Data planetData;
 
@@ -67,7 +42,7 @@ int main()
 	{
 		while (dataManipulationLoop(planetData)) {};
 	}
-	*/
+	
 	return 0;
 }
 
