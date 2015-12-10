@@ -155,6 +155,7 @@
     <ClInclude Include="ExoplanetLHT.h" />
     <ClInclude Include="Exosystem.h" />
     <ClInclude Include="Array.h" />
+    <ClInclude Include="ExosystemP.h" />
     <ClInclude Include="LinkedHashTable.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="LinkedListIterator.h" />

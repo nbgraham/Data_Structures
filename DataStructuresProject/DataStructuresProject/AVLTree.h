@@ -56,16 +56,13 @@ private:
 	Gets the height of the tree starting at the specified node*/
 	int getHeight(node<T>* n);
 	/*
-	Fixes any imbalance, based on the situation represented by the ancestor and added nodes
-	Adapted from https://cskill.wordpress.com/2012/09/02/avl-tree-with-parent-node<T>/*/
-	void fixImbalance(node<T>* ancestor, node<T>* added);
+	Fixes any imbalance, based on the situation represented by the given node and its and its children's diff */
 	void fix(node<T>* ancestor);
 
 	/*
 	Creates a child node of _parent with _data as the data and places it in child (output)*/
 	void makeChildNode(node<T>** child, node<T>* _parent, T* _data);
 	
-
 	/*
 	Finds the node that contains itema and places it in result (output)*/
 	void find(T& item, node<T>** result);
@@ -82,8 +79,9 @@ private:
 	string inorder(string current, node<T>* n);
 
 	/*
-	Swaps the values in the two memory locations*/
-	void swap(T* ptrData, T* other);
+	Swaps the data of the two nodes*/
+	void swap(node<T>* n, node<T>* m);
+
 	/*
 	Clockwise rotation about n
 	left left case*/
@@ -165,35 +163,6 @@ inline int AVLTree<T>::getHeight(node<T> * n)
 }
 
 template<typename T>
-inline void AVLTree<T>::fixImbalance(node<T> * ancestor, node<T> * added)
-{
-	if (*ancestor->data < *added->data) {
-		//Added node is on right of ancestor
-		node<T> * r = ancestor->right;
-		if (*r->data < *added->data) {
-			dbg "right right heavy\n";
-			zag(ancestor);
-		}
-		else if (*r->data > *added->data) {
-			dbg "right left heavy\n";
-			zagzig(ancestor);
-		}
-	}
-	else if (*ancestor->data > *added->data) {
-		//Added node is on left of ancestor
-		node<T> * l = ancestor->left;
-		if (*l->data < *added->data) {
-			dbg "left right heavy\n";
-			zigzag(ancestor);
-		}
-		else if (*l->data > *added->data) {
-			dbg "left left heavy\n";
-			zig(ancestor);
-		}
-	}
-}
-
-template<typename T>
 inline void AVLTree<T>::fix(node<T>* ancestor)
 {
 	if (ancestor->diff > 0) {
@@ -272,11 +241,11 @@ inline string AVLTree<T>::inorder(string current, node<T>* n)
 }
 
 template<typename T>
-inline void AVLTree<T>::swap(T * ptrData, T * other)
+inline void AVLTree<T>::swap(node<T>* n, node<T>* m)
 {
-	T temp = *ptrData;
-	*ptrData = *other;
-	*other = temp;
+	T* temp = n->data;
+	n->data = m->data;
+	m->data = temp;
 }
 
 /*
@@ -308,7 +277,7 @@ inline void AVLTree<T>::zig(node<T>* n)
 	n->right = leftChild;
 	if (leftChild != nullptr) leftChild->parent = n;
 
-	swap(n->data, leftChild->data);
+	swap(n, leftChild);
 }
 
 /*
@@ -340,7 +309,7 @@ inline void AVLTree<T>::zag(node<T>* n)
 	n->left = rightChild;
 	if (rightChild != nullptr) rightChild->parent = n;
 
-	swap(n->data, rightChild->data);
+	swap(n, rightChild);
 }
 /*
 Adapted from lectures slides*/
@@ -456,8 +425,6 @@ inline T* AVLTree<T>::add(T & item)
 			}
 		}
 
-		updateTreeDiffs(root);
-
 		node<T>* ancestor = n->parent;
 
 		while (ancestor != nullptr)
@@ -466,7 +433,7 @@ inline T* AVLTree<T>::add(T & item)
 			if (diff <= -2 || diff >= 2)
 			{
 				dbg "Imbalance "; dbg diff; dbg " at ancestor "; dbg *ancestor->data; dbg " because of added item "; dbg  *n->data; dbg "\n";
-				fixImbalance(ancestor, n);
+				fix(ancestor);
 			}
 			ancestor = ancestor->parent;
 		}
@@ -475,6 +442,7 @@ inline T* AVLTree<T>::add(T & item)
 	}
 	size++;
 
+	if (result == nullptr) throw AVLTreeException();
 	return result;
 }
 

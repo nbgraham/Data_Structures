@@ -8,6 +8,7 @@ class ExosystemP
 public:
 	ExosystemP();
 	ExosystemP(Exosystem* p);
+	ExosystemP(ExosystemP& other);
 	~ExosystemP();
 
 	Exosystem* ptr;
@@ -29,6 +30,11 @@ inline ExosystemP::ExosystemP()
 inline ExosystemP::ExosystemP(Exosystem * p)
 {
 	ptr = p;
+}
+
+inline ExosystemP::ExosystemP(ExosystemP & other)
+{
+	ptr = other.ptr;
 }
 
 inline ExosystemP::~ExosystemP()

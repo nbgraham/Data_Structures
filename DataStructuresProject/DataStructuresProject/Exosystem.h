@@ -1,12 +1,18 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <exception>
 
 using namespace std;
 
 #include "Exoplanet.h"
 #include "LinkedList.h"
 #include "LinkedListIterator.h"
+
+class ExosystemException : public exception {};
+class ExosystemTooManyPlanetsException : public ExosystemException {};
+class ExosystemPlanetNameNotUniqueException : public ExosystemException {};
+class ExosystemPlanetNotFoundException : public ExosystemException {};
 
 class Exosystem
 {

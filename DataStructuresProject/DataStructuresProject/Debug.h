@@ -1,5 +1,4 @@
 #ifndef DEBUG
-#define DEBUG
 #endif
 
 #ifndef dbg

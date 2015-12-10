@@ -36,12 +36,12 @@ void Exosystem::addPlanet(Exoplanet* _exoplanet)
 {
 	if (planets->size() == numberOfPlanets)
 	{
-		throw exception("Too many planets listed for this system.");
+		throw ExosystemTooManyPlanetsException();
 	}
 
 	if (nameExists(_exoplanet->getName()))
 	{
-		throw exception("Planet name is not unique within the system.");
+		throw ExosystemPlanetNameNotUniqueException();
 	}
 
 	planets->add(*_exoplanet);
@@ -165,5 +165,5 @@ void Exosystem::overwritePlanet(Exoplanet* planet)
 		}
 		curr = curr->next;
 	}
-	if (curr == nullptr) throw exception("Specified planet name was not in the linked list.");
+	if (curr == nullptr) throw ExosystemPlanetNotFoundException();
 }

@@ -1,11 +1,11 @@
-﻿Build started 12/9/2015 10:40:51 PM.
-     1>Project "C:\Users\Nicholas\Documents\GitHub\Data_Structures\DataStructuresProject\DataStructuresProject\DataStructuresProject.vcxproj" on node 2 (Build target(s)).
+﻿Build started 12/9/2015 11:43:01 PM.
+     1>Project "C:\Users\Nicholas\Documents\GitHub\Data_Structures\DataStructuresProject\DataStructuresProject\DataStructuresProject.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Data.cpp main.cpp
-         Data.cpp
-         Generating Code...
-         Compiling...
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Data.cpp Exoplanet.cpp Exosystem.cpp main.cpp
          main.cpp
+         Exosystem.cpp
+         Exoplanet.cpp
+         Data.cpp
          Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Nicholas\Documents\GitHub\Data_Structures\DataStructuresProject\Debug\DataStructuresProject.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Nicholas\Documents\GitHub\Data_Structures\DataStructuresProject\Debug\DataStructuresProject.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Nicholas\Documents\GitHub\Data_Structures\DataStructuresProject\Debug\DataStructuresProject.lib" /MACHINE:X86 Debug\Data.obj
@@ -13,8 +13,8 @@
          Debug\Exosystem.obj
          Debug\main.obj
          DataStructuresProject.vcxproj -> C:\Users\Nicholas\Documents\GitHub\Data_Structures\DataStructuresProject\Debug\DataStructuresProject.exe
-     1>Done Building Project "C:\Users\Nicholas\Documents\GitHub\Data_Structures\DataStructuresProject\DataStructuresProject\DataStructuresProject.vcxproj" (Build target(s)).
+     1>Done Building Project "C:\Users\Nicholas\Documents\GitHub\Data_Structures\DataStructuresProject\DataStructuresProject\DataStructuresProject.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:03.88
+Time Elapsed 00:00:06.81

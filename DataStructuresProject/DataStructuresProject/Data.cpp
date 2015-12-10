@@ -237,6 +237,11 @@ void Data::changeDataFromFile(string inputFileName, char type)
 			continue;
 		}
 
+		if (starName == "Kepler-98")
+		{
+			int x = 4;
+		}
+
 		ExosystemP* match = exosystems->search(ExosystemP(currentSystem));
 		if (match == nullptr)
 		{//No match in system
@@ -279,8 +284,19 @@ void Data::changeDataFromFile(string inputFileName, char type)
 		else
 		{
 			dbg "Adding planet "; dbg currentPlanet->getName(); dbg " to system "; dbg currentSystem->getStarName(); dbg "\n";
-			merge(currentSystem, currentPlanet);
-			numberOfReadPlanets++;
+			try
+			{
+				merge(currentSystem, currentPlanet);
+				numberOfReadPlanets++;
+			}
+			catch (ExosystemPlanetNameNotUniqueException e)
+			{
+				rslt << "Planet name " << currentPlanet->getName() << " not unique within " << currentSystem->getStarName() << "\n";
+			}
+			catch (ExosystemTooManyPlanetsException e)
+			{
+				rslt << "Too many planets in exosystem " << currentSystem->getStarName() << "\n";
+			}
 		}
 	}
 	
