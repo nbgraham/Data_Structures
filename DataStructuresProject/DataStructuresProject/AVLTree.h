@@ -59,6 +59,7 @@ private:
 	Fixes any imbalance, based on the situation represented by the ancestor and added nodes
 	Adapted from https://cskill.wordpress.com/2012/09/02/avl-tree-with-parent-node<T>/*/
 	void fixImbalance(node<T>* ancestor, node<T>* added);
+	void fix(node<T>* ancestor);
 
 	/*
 	Creates a child node of _parent with _data as the data and places it in child (output)*/
@@ -71,6 +72,10 @@ private:
 	/*
 	Finds the node with the greatest value less than n and places it in result (output)*/
 	void findGreatestLesserValue(node<T>* n, node<T>** result);
+	/*
+	Removes the specified node*/
+	void remove(node<T>* itemNode);
+
 	
 	/*
 	Recurisve call inorder on the specified node, buidling up current*/
@@ -117,17 +122,15 @@ public:
 	/*
 	Returns a pointer to the data item that is equal to the specified item according to the compare method*/
 	T* search(T& item);
-	T* searchItemAtMemoryLocation(T*item);
 
 	/*
 	Adds the specified item to the tree
 	Adapted from https://cskill.wordpress.com/2012/09/02/avl-tree-with-parent-node/*/
 	T* add(T& item);
-	T* addItemAtMemoryLocation(T* item);
+
 	/*
 	Removes the specified item from the tree*/
 	void remove(T& item);
-	void removeItemAtMemoryLocation(T* item);
 
 	/*
 	Returns a string representation of this tree inorder*/
@@ -184,6 +187,35 @@ inline void AVLTree<T>::fixImbalance(node<T> * ancestor, node<T> * added)
 			zigzag(ancestor);
 		}
 		else if (*l->data > *added->data) {
+			dbg "left left heavy\n";
+			zig(ancestor);
+		}
+	}
+}
+
+template<typename T>
+inline void AVLTree<T>::fix(node<T>* ancestor)
+{
+	if (ancestor->diff > 0) {
+		//heavy side is on right of ancestor
+		node<T> * r = ancestor->right;
+		if (r->diff > 0) {
+			dbg "right right heavy\n";
+			zag(ancestor);
+		}
+		else if (r->diff < 0) {
+			dbg "right left heavy\n";
+			zagzig(ancestor);
+		}
+	}
+	else if (ancestor->diff < 0) {
+		//heavy side is on left of ancestor
+		node<T> * l = ancestor->left;
+		if (l->diff > 0) {
+			dbg "left right heavy\n";
+			zigzag(ancestor);
+		}
+		else if (l->diff < 0) {
 			dbg "left left heavy\n";
 			zig(ancestor);
 		}
@@ -378,12 +410,6 @@ inline T* AVLTree<T>::search(T & item)
 }
 
 template<typename T>
-inline T* AVLTree<T>::searchItemAtMemoryLocation(T * item)
-{
-	return search(*item);
-}
-
-template<typename T>
 inline T* AVLTree<T>::add(T & item)
 {
 	T* result = nullptr;
@@ -453,17 +479,17 @@ inline T* AVLTree<T>::add(T & item)
 }
 
 template<typename T>
-inline T* AVLTree<T>::addItemAtMemoryLocation(T * item)
-{
-	return add(*item);
-}
-
-template<typename T>
 inline void AVLTree<T>::remove(T & item)
 {
 	node<T>* itemNode;
 	find(item, &itemNode);
 
+	remove(itemNode);
+}
+
+template<typename T>
+inline void AVLTree<T>::remove(node<T>* itemNode)
+{
 	node<T>* p = itemNode->parent;
 
 	if (itemNode->left == nullptr && itemNode->right == nullptr)
@@ -475,7 +501,9 @@ inline void AVLTree<T>::remove(T & item)
 			else throw AVLWrongParent();
 		}
 
+		if (itemNode == root) root = nullptr;
 		delete itemNode;
+		itemNode = nullptr;
 	}
 	else if (itemNode->left == nullptr)
 	{
@@ -493,26 +521,26 @@ inline void AVLTree<T>::remove(T & item)
 		findGreatestLesserValue(itemNode, &greatestLesserValue);
 		itemNode->data = greatestLesserValue->data;
 
-		p = greatestLesserValue->parent;
-		if (p != nullptr)
-		{
-			if (p->left == greatestLesserValue) p->left = nullptr;
-			else if (p->right == greatestLesserValue) p->right = nullptr;
-			else throw AVLWrongParent();
-		}
+		remove(greatestLesserValue);
+	}
 
-		delete greatestLesserValue;
+	updateTreeDiffs(root);
+
+	node<T>* ancestor = p;
+	while (ancestor != nullptr)
+	{
+		int diff = updateNodeDiff(ancestor);
+		if (diff <= -2 || diff >= 2)
+		{
+			dbg "Imbalance "; dbg diff; dbg " at ancestor "; dbg *ancestor->data; dbg " because of removed item\n";
+			fix(ancestor);
+		}
+		ancestor = ancestor->parent;
 	}
 
 	updateTreeDiffs(root);
 
 	size--;
-}
-
-template<typename T>
-inline void AVLTree<T>::removeItemAtMemoryLocation(T * item)
-{
-	remove(*item);
 }
 
 template<typename T>

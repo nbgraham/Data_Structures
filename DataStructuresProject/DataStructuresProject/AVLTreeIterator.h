@@ -37,9 +37,11 @@ inline AVLTreeIterator<T>::AVLTreeIterator(AVLTree<T> * _tree)
 	visitedNodes = new Array<node<T>*>(_tree->getSize());
 
 	currNode = _tree->getRoot();
-	while (currNode->left != nullptr) currNode = currNode->left;
-
-	visitedNodes->add(currNode);
+	if (currNode != nullptr)
+	{
+		while (currNode->left != nullptr) currNode = currNode->left;
+		visitedNodes->add(currNode);
+	}
 }
 
 template<typename T>
